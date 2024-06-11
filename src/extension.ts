@@ -1,26 +1,67 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
+import Auth from "./auth/credentials";
+import { AmplifyBackendTreeDataProvider } from "./explorer/amplify-backend-tree-data-provider";
+import { AmplifyBackendResourceTreeNode } from "./explorer/amplify-backend-resource-tree-node";
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "amplify-backend-explorer.openConsole",
+      (node: AmplifyBackendResourceTreeNode) => {
+        const url = node.consoleUrl;
+        if (url) {
+          vscode.env.openExternal(vscode.Uri.parse(url));
+        } else {
+          vscode.window.showInformationMessage(
+            `Now ${node.cloudformationType} is not supported resource type to open AWS Cosnsole.`
+          );
+        }
+      }
+    )
+  );
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "amplify-backend-explorer" is now active!');
+  const rootPath =
+    vscode.workspace.workspaceFolders &&
+    vscode.workspace.workspaceFolders.length > 0
+      ? vscode.workspace.workspaceFolders[0].uri.fsPath
+      : undefined;
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	const disposable = vscode.commands.registerCommand('amplify-backend-explorer.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from amplify-backend-explorer!');
-	});
+  const amplifyBackendTreeDataProvider = new AmplifyBackendTreeDataProvider(
+    rootPath || ""
+  );
+  const treeView = vscode.window.createTreeView("amplify-backend-explorer", {
+    treeDataProvider: amplifyBackendTreeDataProvider,
+  });
+  context.subscriptions.push(
+    vscode.commands.registerCommand("amplify-backend-explorer.refresh", () => {
+      amplifyBackendTreeDataProvider.refresh();
+    })
+  );
 
-	context.subscriptions.push(disposable);
+  Auth.instance.setProfile(context.workspaceState.get("profile", "default"));
+  Auth.instance.onDidChangeProfile(() => {
+    context.workspaceState.update("profile", Auth.instance.getProfile());
+    amplifyBackendTreeDataProvider.refresh();
+  });
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "amplify-backend-explorer.switchCredentials",
+      async () => {
+        const options = await Auth.instance.getProfiles();
+        const quickPick = vscode.window.createQuickPick();
+        quickPick.items = options.map((label) => ({ label }));
+        quickPick.onDidChangeSelection((selection) => {
+          if (selection[0]) {
+            Auth.instance.setProfile(selection[0].label);
+            quickPick.hide();
+          }
+        });
+        quickPick.onDidHide(() => quickPick.dispose());
+        quickPick.show();
+      }
+    )
+  );
 }
 
-// This method is called when your extension is deactivated
 export function deactivate() {}

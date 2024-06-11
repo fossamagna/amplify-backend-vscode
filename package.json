@@ -14,10 +14,49 @@
   "contributes": {
     "commands": [
       {
-        "command": "amplify-backend-explorer.helloWorld",
-        "title": "Hello "
+        "command": "amplify-backend-explorer.refresh",
+        "title": "Refresh",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
+      },
+      {
+        "command": "amplify-backend-explorer.openConsole",
+        "title": "Open AWS Console"
+      },
+      {
+        "command": "amplify-backend-explorer.switchCredentials",
+        "title": "Switch AWS Profile"
       }
-    ]
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "amplify-backend-explorer.refresh",
+          "when": "view == amplify-backend-explorer",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "amplify-backend-explorer.openConsole",
+          "when": "view == amplify-backend-explorer && viewItem == resourceNode"
+        },
+        {
+          "command": "amplify-backend-explorer.switchCredentials",
+          "when": "view == amplify-backend-explorer && viewItem == authNode"
+        }
+      ]
+    },
+    "views": {
+      "explorer": [
+        {
+          "id": "amplify-backend-explorer",
+          "name": "Amplify Backend Explorer"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
@@ -34,16 +73,21 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.90.0",
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
+    "@types/vscode": "^1.90.0",
     "@typescript-eslint/eslint-plugin": "^7.11.0",
     "@typescript-eslint/parser": "^7.11.0",
-    "eslint": "^8.57.0",
-    "esbuild": "^0.21.4",
-    "npm-run-all": "^4.1.5",
-    "typescript": "^5.4.5",
     "@vscode/test-cli": "^0.0.9",
-    "@vscode/test-electron": "^2.4.0"
+    "@vscode/test-electron": "^2.4.0",
+    "esbuild": "^0.21.4",
+    "eslint": "^8.57.0",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@aws-sdk/client-cloudformation": "^3.592.0",
+    "@aws-sdk/credential-providers": "^3.592.0",
+    "@smithy/shared-ini-file-loader": "^3.1.0"
   }
 }
