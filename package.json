@@ -1,13 +1,19 @@
 {
-  "name": "amplify-backend-explorer",
-  "displayName": "amplify-backend-explorer",
-  "description": "",
-  "version": "0.0.1",
+  "name": "amplify-backend-vscode",
+  "publisher": "fossamagna",
+  "displayName": "AWS Amplify Backend",
+  "description": "VSCode Extension to explore Amplify Gen2 backend resources",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
   "engines": {
     "vscode": "^1.90.0"
   },
   "categories": [
     "Other"
+  ],
+  "keywords": [
+    "Amplify",
+    "AWS"
   ],
   "activationEvents": [],
   "main": "./dist/extension.js",
@@ -58,6 +64,16 @@
       ]
     }
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fossamagna/amplify-backend-vscode"
+  },
+  "icon": "images/logo.png",
+  "bugs": {
+    "url": "https://github.com/fossamagna/amplify-backend-vscode/issues"
+  },
+  "homepage": "https://github.com/fossamagna/amplify-backend-vscode/blob/main/README.md",
+  "pricing": "Free",
   "scripts": {
     "vscode:prepublish": "npm run package",
     "compile": "npm run check-types && npm run lint && node esbuild.js",
