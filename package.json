@@ -89,6 +89,7 @@
     "test": "vscode-test"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.27.5",
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
     "@types/vscode": "^1.90.0",
