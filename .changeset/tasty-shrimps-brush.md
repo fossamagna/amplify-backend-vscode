@@ -2,4 +2,4 @@
 "amplify-backend-vscode": patch
 ---
 
-fix: use logialResourceId instead of PhysicalResourceId as tree node's label
+fix: use LogicalResourceId instead of PhysicalResourceId as tree node's label
