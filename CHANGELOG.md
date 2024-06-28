@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.2.1
+
+### Patch Changes
+
+- [#23](https://github.com/fossamagna/amplify-backend-vscode/pull/23) [`68aaac6`](https://github.com/fossamagna/amplify-backend-vscode/commit/68aaac6bad9462266526d75a7f0bb0cf256df9b7) Thanks [@fossamagna](https://github.com/fossamagna)! - fix: use LogicalResourceId instead of PhysicalResourceId as tree node's label
+
 ## 0.2.0
 
 ### Minor Changes
