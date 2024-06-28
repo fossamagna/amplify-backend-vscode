@@ -55,7 +55,7 @@ export class AmplifyBackendTreeDataProvider
     }
     return response.StackResources.map((resource) => {
       return new AmplifyBackendResourceTreeNode(
-        resource.PhysicalResourceId!,
+        resource.LogicalResourceId!,
         resource.ResourceType!,
         resource
       );
