@@ -60,6 +60,10 @@ const urlBuilders: Record<
     const resourceId = physicalResourceId;
     return `https://${region}.console.aws.amazon.com/s3/buckets/${resourceId}?region=${region}`;
   },
+  "AWS::StepFunctions::StateMachine": (physicalResourceId, region) => {
+    const resourceId = physicalResourceId;
+    return `https://${region}.console.aws.amazon.com/states/home?region=${region}#/statemachines/view/${resourceId}`;
+  },
   "AWS::IAM::Role": (physicalResourceId, region) => {
     const resourceId = physicalResourceId;
     return `https://${region}.console.aws.amazon.com/iam/home?region=${region}#/roles/${resourceId}`;

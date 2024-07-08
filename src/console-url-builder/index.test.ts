@@ -43,4 +43,18 @@ describe("Console URL Builder Test Suite", () => {
       "https://ap-northeast-1.console.aws.amazon.com/dynamodbv2/home?region=ap-northeast-1#table?name=Todo-1234567890-NOE&tab=overview"
     );
   });
+
+  test("AWS::StepFunctions::StateMachine", () => {
+    const url = buildUrl({
+      ResourceType: "AWS::StepFunctions::StateMachine",
+      StackId:
+        "arn:aws:cloudformation:ap-northeast-1:123456789012:stack/myteststack/abc",
+      PhysicalResourceId:
+        "arn:aws:states:ap-northeast-1:123456789012:stateMachine:AmplifyTableWaiterStateMachine01234567-aBcDeFgHiJkLmNoPqRsT",
+    });
+    assert.strictEqual(
+      url,
+      "https://ap-northeast-1.console.aws.amazon.com/states/home?region=ap-northeast-1#/statemachines/view/arn:aws:states:ap-northeast-1:123456789012:stateMachine:AmplifyTableWaiterStateMachine01234567-aBcDeFgHiJkLmNoPqRsT"
+    );
+  });
 });
