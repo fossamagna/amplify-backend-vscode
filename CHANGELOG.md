@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.3.0
+
+### Minor Changes
+
+- [#33](https://github.com/fossamagna/amplify-backend-vscode/pull/33) [`e79a2b3`](https://github.com/fossamagna/amplify-backend-vscode/commit/e79a2b36e1b2e2127861ca71fa92b1fee4e41be7) Thanks [@fossamagna](https://github.com/fossamagna)! - feat: Open AWS console for `AWS::StepFunctions::StateMachine`
+
+- [#44](https://github.com/fossamagna/amplify-backend-vscode/pull/44) [`f9878fb`](https://github.com/fossamagna/amplify-backend-vscode/commit/f9878fb32f1dfa31c0053b8a992ab4dcdd5bd5a6) Thanks [@fossamagna](https://github.com/fossamagna)! - introduce to support monorepo.
+  this detect the Amplify project in nested directories.
+
+### Patch Changes
+
+- [#45](https://github.com/fossamagna/amplify-backend-vscode/pull/45) [`81c2526`](https://github.com/fossamagna/amplify-backend-vscode/commit/81c2526def4d1099efc952db082e6c0058423595) Thanks [@fossamagna](https://github.com/fossamagna)! - retrieve the list of profiles from `~/.aws/config` instead of `~/.aws/credentials` to support to profile with AWS SSO login.
+
 ## 0.2.1
 
 ### Patch Changes
