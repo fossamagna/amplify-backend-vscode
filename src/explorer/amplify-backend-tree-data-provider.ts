@@ -11,6 +11,7 @@ import Auth from "../auth/credentials";
 import { AuthNode } from "./auth-node";
 import { AmplifyBackendBaseNode } from "./amplify-backend-base-node";
 import { isStackNode } from "./utils";
+import { detectAmplifyProjects } from "./amplify-project-detector";
 
 export class AmplifyBackendTreeDataProvider
   implements vscode.TreeDataProvider<AmplifyBackendBaseNode>
@@ -62,6 +63,42 @@ export class AmplifyBackendTreeDataProvider
     });
   }
 
+  private async getManifestJsonPaths(): Promise<string[]> {
+    const projects = await detectAmplifyProjects(this.workspaceRoot);
+    return projects.map((project) => this.getManifestJsonPath(project));
+  }
+
+  private getManifestJsonPath(amplifyProjectPath: string): string {
+    return path.join(
+      amplifyProjectPath,
+      this.relativeCloudAssemblyLocation,
+      "manifest.json"
+    );
+  }
+
+  private async getRootChildren() {
+    const manifestJsonPaths = await this.getManifestJsonPaths();
+    const existManifestPaths = manifestJsonPaths.filter((manifestJsonPath) =>
+      this.pathExists(manifestJsonPath)
+    );
+    if (existManifestPaths.length) {
+      const profile = Auth.instance.getProfile();
+      return Promise.resolve([
+        new AuthNode(`Connected with profile: ${profile}`, profile),
+        ...existManifestPaths
+          .map((manifestJsonPath) =>
+            this.getResourcesInManifest(manifestJsonPath)
+          )
+          .flat(),
+      ]);
+    } else {
+      vscode.window.showInformationMessage(
+        "Workspace has no amplify artifacts in .amplify/artifacts/cdk.out"
+      );
+      return Promise.resolve([]);
+    }
+  }
+
   getChildren(
     element?: AmplifyBackendBaseNode
   ): vscode.ProviderResult<AmplifyBackendBaseNode[]> {
@@ -74,23 +111,7 @@ export class AmplifyBackendTreeDataProvider
         return [];
       }
     } else {
-      const manifestJsonPath = path.join(
-        this.workspaceRoot,
-        this.relativeCloudAssemblyLocation,
-        "manifest.json"
-      );
-      if (this.pathExists(manifestJsonPath)) {
-        const profile = Auth.instance.getProfile();
-        return Promise.resolve([
-          new AuthNode(`Connected with profile: ${profile}`, profile),
-          ...this.getResourcesInManifest(manifestJsonPath),
-        ]);
-      } else {
-        vscode.window.showInformationMessage(
-          "Workspace has no amplify artifacts in .amplify/artifacts/cdk.out"
-        );
-        return Promise.resolve([]);
-      }
+      return this.getRootChildren();
     }
   }
 
