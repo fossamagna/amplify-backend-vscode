@@ -15,7 +15,7 @@ class Auth {
 
   async getProfiles(): Promise<string[]> {
     const sharedConfigFiles = await loadSharedConfigFiles();
-    return Object.keys(sharedConfigFiles.credentialsFile);
+    return Object.keys(sharedConfigFiles.configFile);
   }
 
   async getCredentials(profile: string) {
