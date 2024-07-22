@@ -57,4 +57,31 @@ describe("Console URL Builder Test Suite", () => {
       "https://ap-northeast-1.console.aws.amazon.com/states/home?region=ap-northeast-1#/statemachines/view/arn:aws:states:ap-northeast-1:123456789012:stateMachine:AmplifyTableWaiterStateMachine01234567-aBcDeFgHiJkLmNoPqRsT"
     );
   });
+
+  test("AWS::AppSync::GraphQLApi", () => {
+    const url = buildUrl({
+      ResourceType: "AWS::AppSync::GraphQLApi",
+      StackId:
+        "arn:aws:cloudformation:ap-northeast-1:123456789012:stack/myteststack/abc",
+      PhysicalResourceId:
+        "arn:aws:appsync:ap-northeast-1:767397698580:apis/0123456789abcdefghijklmnop",
+    });
+    assert.strictEqual(
+      url,
+      "https://ap-northeast-1.console.aws.amazon.com/appsync/home?region=ap-northeast-1#/0123456789abcdefghijklmnop/v1/home"
+    );
+  });
+
+  test("AWS::AppSync::GraphQLSchema", () => {
+    const url = buildUrl({
+      ResourceType: "AWS::AppSync::GraphQLSchema",
+      StackId:
+        "arn:aws:cloudformation:ap-northeast-1:123456789012:stack/myteststack/abc",
+      PhysicalResourceId: "0123456789abcdefghijklmnopGraphQLSchema",
+    });
+    assert.strictEqual(
+      url,
+      "https://ap-northeast-1.console.aws.amazon.com/appsync/home?region=ap-northeast-1#/0123456789abcdefghijklmnop/v1/schema"
+    );
+  });
 });

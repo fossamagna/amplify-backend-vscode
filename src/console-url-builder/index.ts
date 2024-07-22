@@ -39,7 +39,7 @@ const urlBuilders: Record<
     return `https://${region}.console.aws.amazon.com/appsync/home?region=${region}#/${resourceId}/v1/home`;
   },
   "AWS::AppSync::GraphQLSchema": (physicalResourceId, region) => {
-    const resourceId = physicalResourceId.split("/", 2)[1];
+    const resourceId = physicalResourceId.replace("GraphQLSchema", "");
     return `https://${region}.console.aws.amazon.com/appsync/home?region=${region}#/${resourceId}/v1/schema`;
   },
   "AWS::AppSync::DataSource": (physicalResourceId, region) => {
