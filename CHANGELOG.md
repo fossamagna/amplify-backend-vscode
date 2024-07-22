@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.3.1
+
+### Patch Changes
+
+- [#51](https://github.com/fossamagna/amplify-backend-vscode/pull/51) [`2a9e116`](https://github.com/fossamagna/amplify-backend-vscode/commit/2a9e116f2791b17f6f597cac2f98c3a59b5adfb1) Thanks [@fossamagna](https://github.com/fossamagna)! - fix: AWS console URL in GraphQL Schema of AppSync to correct URL
+
 ## 0.3.0
 
 ### Minor Changes
