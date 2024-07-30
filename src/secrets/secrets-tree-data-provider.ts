@@ -1,36 +1,36 @@
 import * as vscode from "vscode";
-import { userInfo } from "os";
-import { AmpxAmplifySecrets } from "./amplify-secrets";
+import type { BackendIdentifier } from "@aws-amplify/plugin-types";
+import { AmplifyBackendSecret } from "./amplify-secrets";
 import { detectAmplifyProjects } from "../explorer/amplify-project-detector";
+import { AmplifyProjectImpl } from "../project";
 
 export abstract class SecretsTreeItem extends vscode.TreeItem {
   constructor(
-    public readonly label: string,
+    public readonly backendIdentifier: BackendIdentifier,
     public readonly collapsibleState: vscode.TreeItemCollapsibleState
   ) {
-    super(label, collapsibleState);
+    super(backendIdentifier.name, collapsibleState);
   }
 }
 
 export class IdentifierTreeItem extends SecretsTreeItem {
   constructor(
-    public readonly projectDir: string,
-    public readonly identifier: string,
+    public readonly backendIdentifier: BackendIdentifier,
     public readonly collapsibleState: vscode.TreeItemCollapsibleState
   ) {
-    super(identifier, collapsibleState);
+    super(backendIdentifier, collapsibleState);
     this.contextValue = "identifierNode";
   }
 }
 
 export class SecretNameTreeItem extends SecretsTreeItem {
   constructor(
-    public readonly projectDir: string,
-    public readonly identifier: string,
+    public readonly backendIdentifier: BackendIdentifier,
     public readonly name: string,
     public readonly collapsibleState: vscode.TreeItemCollapsibleState
   ) {
-    super(name, collapsibleState);
+    super(backendIdentifier, collapsibleState);
+    this.label = name;
     this.contextValue = "secretNameNode";
   }
 }
@@ -55,15 +55,13 @@ export class SecretsTreeDataProvider
   }
 
   private async getSecretList(
-    projectDir: string,
-    identifier: string
+    backendIdentifier: BackendIdentifier
   ): Promise<SecretNameTreeItem[]> {
-    const secretsClient = new AmpxAmplifySecrets(projectDir, identifier);
+    const secretsClient = new AmplifyBackendSecret(backendIdentifier);
     const secretsList = await secretsClient.listSecrets();
     return secretsList.map((name) => {
       return new SecretNameTreeItem(
-        projectDir,
-        identifier,
+        backendIdentifier,
         name,
         vscode.TreeItemCollapsibleState.None
       );
@@ -72,11 +70,17 @@ export class SecretsTreeDataProvider
 
   private async getRootChildren(): Promise<SecretsTreeItem[]> {
     const projects = await detectAmplifyProjects(this.workspaceRoot);
-    return projects.map(
-      (project) =>
+    const backendIdentifiers = projects
+      .map((project) => new AmplifyProjectImpl(project))
+      .map((project) => project.getBackendIdentifier())
+      .filter(
+        (backendIdentifier): backendIdentifier is BackendIdentifier =>
+          !!backendIdentifier
+      );
+    return backendIdentifiers.map(
+      (backendIdentifier) =>
         new IdentifierTreeItem(
-          project,
-          this.identifier ?? userInfo().username,
+          backendIdentifier,
           vscode.TreeItemCollapsibleState.Collapsed
         )
     );
@@ -87,7 +91,7 @@ export class SecretsTreeDataProvider
   ): vscode.ProviderResult<SecretsTreeItem[]> {
     if (element) {
       if (element instanceof IdentifierTreeItem) {
-        return this.getSecretList(element.projectDir, element.identifier);
+        return this.getSecretList(element.backendIdentifier);
       }
     } else {
       return this.getRootChildren();

@@ -150,12 +150,16 @@
     "cross-env": "^7.0.3",
     "esbuild": "^0.23.0",
     "eslint": "^8.57.0",
+    "execa": "^5.1.1",
     "mocha": "^10.5.1",
     "npm-run-all2": "^6.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@aws-amplify/backend-secret": "^1.0.0",
+    "@aws-amplify/platform-core": "^1.0.3",
+    "@aws-amplify/plugin-types": "^1.1.0",
     "@aws-sdk/client-cloudformation": "^3.592.0",
     "@aws-sdk/credential-providers": "^3.592.0",
     "@smithy/shared-ini-file-loader": "^3.1.0",

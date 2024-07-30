@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { AmpxAmplifySecrets } from "./amplify-secrets";
+import { AmplifyBackendSecret } from "./amplify-secrets";
 import { SecretNameTreeItem } from "./secrets-tree-data-provider";
 import { secretValueInput } from "./secret-value-input-box";
 
@@ -10,7 +10,7 @@ export const addSecretCommand = async (node: SecretNameTreeItem) => {
   }
   await secretValueInput(
     name,
-    new AmpxAmplifySecrets(node.projectDir, node.identifier)
+    new AmplifyBackendSecret(node.backendIdentifier)
   );
 };
 
