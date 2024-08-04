@@ -39,11 +39,14 @@ export class AmplifyBackendTreeDataProvider
     backendIdentifier: BackendIdentifier,
     stackName: string
   ): Promise<AmplifyBackendBaseNode[]> {
+    const profile = Auth.instance.getProfile();
     const credentials = fromIni({
-      profile: Auth.instance.getProfile(),
+      profile,
     });
+    const region = await Auth.instance.getRegion(profile);
     const client = new CloudFormationClient({
       credentials,
+      region,
     });
     const input = {
       StackName: stackName,

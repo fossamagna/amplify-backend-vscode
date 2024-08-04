@@ -1,10 +1,13 @@
 import * as vscode from "vscode";
-import { loadSharedConfigFiles } from "@smithy/shared-ini-file-loader";
+import {
+  loadSharedConfigFiles,
+  DEFAULT_PROFILE,
+} from "@smithy/shared-ini-file-loader";
 
 class Auth {
   static readonly instance = new Auth();
 
-  private profile: string = "default";
+  private profile: string = DEFAULT_PROFILE;
 
   private _onDidChangeProfile: vscode.EventEmitter<string | undefined | void> =
     new vscode.EventEmitter<string | undefined | void>();
@@ -35,6 +38,12 @@ class Auth {
   setProfile(profile: string) {
     this.profile = profile;
     this._onDidChangeProfile.fire(profile);
+  }
+
+  async getRegion(profile?: string) {
+    const sharedConfigFiles = await loadSharedConfigFiles();
+    const iniSection = sharedConfigFiles.configFile[profile ?? this.profile];
+    return iniSection.region;
   }
 }
 

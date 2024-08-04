@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.3.2
+
+### Patch Changes
+
+- [#67](https://github.com/fossamagna/amplify-backend-vscode/pull/67) [`d4f9f30`](https://github.com/fossamagna/amplify-backend-vscode/commit/d4f9f30b7f98b23bda43262026ecaf351a8294e8) Thanks [@fossamagna](https://github.com/fossamagna)! - fix: provide region to AWS SDK client from config file
+
 ## 0.3.1
 
 ### Patch Changes
