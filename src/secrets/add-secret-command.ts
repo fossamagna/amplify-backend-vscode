@@ -10,7 +10,7 @@ export const addSecretCommand = async (node: SecretNameTreeItem) => {
   }
   await secretValueInput(
     name,
-    new AmplifyBackendSecret(node.backendIdentifier)
+    new AmplifyBackendSecret(node.amplifyProject.getBackendIdentifier()!)
   );
 };
 
