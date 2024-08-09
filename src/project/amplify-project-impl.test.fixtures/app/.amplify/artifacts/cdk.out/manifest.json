@@ -1,0 +1,16 @@
+{
+  "version": "36.0.0",
+  "artifacts": {
+    "amplify-amplifyvitereacttemplate-fossamagna-sandbox-a8f5c46cb7.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "amplify-amplifyvitereacttemplate-fossamagna-sandbox-a8f5c46cb7.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "amplify-amplifyvitereacttemplate-fossamagna-sandbox-a8f5c46cb7": {
+      "type": "aws:cloudformation:stack"
+    }
+  }
+}

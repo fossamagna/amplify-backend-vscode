@@ -34,6 +34,30 @@
       {
         "command": "amplify-backend-explorer.switchCredentials",
         "title": "Switch AWS Profile"
+      },
+      {
+        "command": "amplify-backend-secrets-explorer.refresh",
+        "title": "Refresh",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
+      },
+      {
+        "command": "amplify-backend-secrets-explorer.editSecret",
+        "title": "Edit secret"
+      },
+      {
+        "command": "amplify-backend-secrets-explorer.removeSecret",
+        "title": "Remove secret"
+      },
+      {
+        "command": "amplify-backend-secrets-explorer.addSecret",
+        "title": "Add new secret",
+        "icon": {
+          "light": "resources/light/add.svg",
+          "dark": "resources/dark/add.svg"
+        }
       }
     ],
     "menus": {
@@ -41,6 +65,16 @@
         {
           "command": "amplify-backend-explorer.refresh",
           "when": "view == amplify-backend-explorer",
+          "group": "navigation"
+        },
+        {
+          "command": "amplify-backend-secrets-explorer.refresh",
+          "when": "view == amplify-backend-secrets-explorer",
+          "group": "navigation"
+        },
+        {
+          "command": "amplify-backend-secrets-explorer.addSecret",
+          "when": "view == amplify-backend-secrets-explorer",
           "group": "navigation"
         }
       ],
@@ -52,6 +86,14 @@
         {
           "command": "amplify-backend-explorer.switchCredentials",
           "when": "view == amplify-backend-explorer && viewItem == authNode"
+        },
+        {
+          "command": "amplify-backend-secrets-explorer.editSecret",
+          "when": "view == amplify-backend-secrets-explorer && viewItem == secretNameNode"
+        },
+        {
+          "command": "amplify-backend-secrets-explorer.removeSecret",
+          "when": "view == amplify-backend-secrets-explorer && viewItem == secretNameNode"
         }
       ]
     },
@@ -60,6 +102,10 @@
         {
           "id": "amplify-backend-explorer",
           "name": "Amplify Backend Explorer"
+        },
+        {
+          "id": "amplify-backend-secrets-explorer",
+          "name": "Amplify Backend Secrets Explorer"
         }
       ]
     }
@@ -104,12 +150,16 @@
     "cross-env": "^7.0.3",
     "esbuild": "^0.23.0",
     "eslint": "^8.57.0",
+    "execa": "^5.1.1",
     "mocha": "^10.5.1",
     "npm-run-all2": "^6.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@aws-amplify/backend-secret": "^1.0.0",
+    "@aws-amplify/platform-core": "^1.0.3",
+    "@aws-amplify/plugin-types": "^1.1.0",
     "@aws-sdk/client-cloudformation": "^3.592.0",
     "@aws-sdk/credential-providers": "^3.592.0",
     "@smithy/shared-ini-file-loader": "^3.1.0",
