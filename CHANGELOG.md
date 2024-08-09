@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.4.0
+
+### Minor Changes
+
+- [#59](https://github.com/fossamagna/amplify-backend-vscode/pull/59) [`2e07d16`](https://github.com/fossamagna/amplify-backend-vscode/commit/2e07d16abdc4494fd4e02c5cb8fb5f6524dcc413) Thanks [@fossamagna](https://github.com/fossamagna)! - feat: add support to set/get/remove secret value in sandbox environment
+
 ## 0.3.2
 
 ### Patch Changes
