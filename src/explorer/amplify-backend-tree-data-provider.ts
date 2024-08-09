@@ -11,7 +11,7 @@ import { AuthNode } from "./auth-node";
 import { AmplifyBackendBaseNode } from "./amplify-backend-base-node";
 import { isStackNode } from "./utils";
 import { detectAmplifyProjects } from "./amplify-project-detector";
-import { AmplifyProject, AmplifyProjectImpl } from "../project";
+import { AmplifyProject, getAmplifyProject } from "../project";
 
 export class AmplifyBackendTreeDataProvider
   implements vscode.TreeDataProvider<AmplifyBackendBaseNode>
@@ -69,7 +69,7 @@ export class AmplifyBackendTreeDataProvider
   private async getRootChildren() {
     const projects = await detectAmplifyProjects(this.workspaceRoot);
     const nodes = projects
-      .map((project) => new AmplifyProjectImpl(project))
+      .map((project) => getAmplifyProject(project))
       .map((project) => this.getResourcesInAmplifyProject(project))
       .filter((node): node is AmplifyBackendBaseNode => !!node);
 

@@ -1,5 +1,4 @@
 import type { BackendIdentifier } from "@aws-amplify/plugin-types";
-const backendSecret = import("@aws-amplify/backend-secret");
 
 export interface AmplifySecrets {
   getSecret(secretName: string): Promise<SecretItem>;
@@ -25,8 +24,14 @@ export class AmplifyBackendSecret implements AmplifySecrets {
     this.backendIdentifier = backendIdentifier;
   }
 
-  async getSecret(secretName: string): Promise<SecretItem> {
+  private async getBackendSecretClient() {
+    const backendSecret = import("@aws-amplify/backend-secret");
     const secretClient = (await backendSecret).getSecretClient();
+    return secretClient;
+  }
+
+  async getSecret(secretName: string): Promise<SecretItem> {
+    const secretClient = await this.getBackendSecretClient();
     const secret = secretClient.getSecret(this.backendIdentifier, {
       name: secretName,
     });
@@ -34,7 +39,7 @@ export class AmplifyBackendSecret implements AmplifySecrets {
   }
 
   async setSecret(secretName: string, secretValue: string): Promise<void> {
-    const secretClient = (await backendSecret).getSecretClient();
+    const secretClient = await this.getBackendSecretClient();
     await secretClient.setSecret(
       this.backendIdentifier,
       secretName,
@@ -43,12 +48,12 @@ export class AmplifyBackendSecret implements AmplifySecrets {
   }
 
   async removeSecret(secretName: string): Promise<void> {
-    const secretClient = (await backendSecret).getSecretClient();
+    const secretClient = await this.getBackendSecretClient();
     await secretClient.removeSecret(this.backendIdentifier, secretName);
   }
 
   async listSecrets(): Promise<string[]> {
-    const secretClient = (await backendSecret).getSecretClient();
+    const secretClient = await this.getBackendSecretClient();
     const items = await secretClient.listSecrets(this.backendIdentifier);
     return items.map((item) => item.name);
   }

@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import type { BackendIdentifier } from "@aws-amplify/plugin-types";
 import { AmplifyBackendSecret } from "./amplify-secrets";
 import { detectAmplifyProjects } from "../explorer/amplify-project-detector";
-import { AmplifyProjectImpl } from "../project";
+import { getAmplifyProject } from "../project";
 
 export abstract class SecretsTreeItem extends vscode.TreeItem {
   constructor(
@@ -42,8 +42,6 @@ export class SecretsTreeDataProvider
     SecretsTreeItem | undefined | void
   > = new vscode.EventEmitter<SecretsTreeItem | undefined | void>();
 
-  private identifier?: string;
-
   constructor(private workspaceRoot: string) {}
 
   onDidChangeTreeData = this._onDidChangeTreeData.event;
@@ -71,7 +69,7 @@ export class SecretsTreeDataProvider
   private async getRootChildren(): Promise<SecretsTreeItem[]> {
     const projects = await detectAmplifyProjects(this.workspaceRoot);
     const backendIdentifiers = projects
-      .map((project) => new AmplifyProjectImpl(project))
+      .map((project) => getAmplifyProject(project))
       .map((project) => project.getBackendIdentifier())
       .filter(
         (backendIdentifier): backendIdentifier is BackendIdentifier =>
