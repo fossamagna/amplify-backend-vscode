@@ -45,7 +45,7 @@ export const secretValueInput = async (
           if (result) {
             secretsClient.setSecret(secretName, result).then(() => {
               vscode.window.showInformationMessage(
-                `Updated secret value for ${secretName}`
+                `Set secret value for ${secretName}`
               );
             });
           }
