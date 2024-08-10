@@ -84,4 +84,22 @@ describe("Console URL Builder Test Suite", () => {
       "https://ap-northeast-1.console.aws.amazon.com/appsync/home?region=ap-northeast-1#/0123456789abcdefghijklmnop/v1/schema"
     );
   });
+
+  test("AWS::SQS::Queue", () => {
+    const url = buildUrl({
+      ResourceType: "AWS::SQS::Queue",
+      StackId:
+        "arn:aws:cloudformation:ap-northeast-1:123456789012:stack/myteststack/abc",
+      PhysicalResourceId:
+        "https://sqs.ap-northeast-1.amazonaws.com/123456789012/test-queue-name.fifo",
+    });
+    assert.deepEqual(url, {
+      scheme: "https",
+      authority: "ap-northeast-1.console.aws.amazon.com",
+      path: "/sqs/v3/home",
+      query: "region=ap-northeast-1",
+      fragment:
+        "/queues/https%3A%2F%2Fsqs.ap-northeast-1.amazonaws.com%2F123456789012%2Ftest-queue-name.fifo",
+    });
+  });
 });

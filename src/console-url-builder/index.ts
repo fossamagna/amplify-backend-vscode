@@ -16,9 +16,32 @@ export function buildUrl(
   }
 }
 
+export type UriComponents = {
+  /**
+   * The scheme of the uri
+   */
+  readonly scheme: string;
+  /**
+   * The authority of the uri
+   */
+  readonly authority?: string;
+  /**
+   * The path of the uri
+   */
+  readonly path?: string;
+  /**
+   * The query string of the uri
+   */
+  readonly query?: string;
+  /**
+   * The fragment identifier of the uri
+   */
+  readonly fragment?: string;
+};
+
 const urlBuilders: Record<
   string,
-  (physicalResourceId: string, region: string) => string
+  (physicalResourceId: string, region: string) => string | UriComponents
 > = {
   "AWS::CloudFormation::Stack": (physicalResourceId, region) => {
     const resourceId = physicalResourceId!;
@@ -75,5 +98,15 @@ const urlBuilders: Record<
   "Custom::AmplifyDynamoDBTable": (physicalResourceId, region) => {
     const tableName = physicalResourceId;
     return `https://${region}.console.aws.amazon.com/dynamodbv2/home?region=${region}#table?name=${tableName}&tab=overview`;
+  },
+  "AWS::SQS::Queue": (physicalResourceId, region) => {
+    const resourceId = physicalResourceId;
+    return {
+      scheme: "https",
+      authority: `${region}.console.aws.amazon.com`,
+      path: `/sqs/v3/home`,
+      query: `region=${region}`,
+      fragment: `/queues/${encodeURIComponent(resourceId)}`,
+    };
   },
 };

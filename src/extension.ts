@@ -12,9 +12,13 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(
       "amplify-backend-explorer.openConsole",
       (node: AmplifyBackendResourceTreeNode) => {
-        const url = node.consoleUrl;
-        if (url) {
-          vscode.env.openExternal(vscode.Uri.parse(url));
+        const { consoleUrl } = node;
+        if (consoleUrl) {
+          const uri =
+            typeof consoleUrl === "string"
+              ? vscode.Uri.parse(consoleUrl)
+              : vscode.Uri.from(consoleUrl);
+          vscode.env.openExternal(uri);
         } else {
           vscode.window.showInformationMessage(
             `Now ${node.cloudformationType} is not supported resource type to open AWS Cosnsole.`
