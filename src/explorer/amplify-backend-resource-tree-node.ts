@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { StackResource } from "@aws-sdk/client-cloudformation";
 import { AmplifyBackendBaseNode } from "./amplify-backend-base-node";
 import { isStack } from "./utils";
-import { buildUrl } from "../console-url-builder";
+import { buildUrl, UriComponents } from "../console-url-builder";
 import type { BackendIdentifier } from "@aws-amplify/plugin-types";
 
 export class AmplifyBackendResourceTreeNode extends AmplifyBackendBaseNode {
@@ -26,7 +26,7 @@ export class AmplifyBackendResourceTreeNode extends AmplifyBackendBaseNode {
     this.contextValue = "resourceNode";
   }
 
-  get consoleUrl(): string | undefined {
+  get consoleUrl(): string | UriComponents | undefined {
     return this.resource && buildUrl(this.resource);
   }
 }
