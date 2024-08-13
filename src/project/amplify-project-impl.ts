@@ -14,10 +14,11 @@ export class AmplifyProjectImpl implements AmplifyProject {
       const manifest = JSON.parse(fs.readFileSync(manifestJsonPath, "utf-8"));
       const stackName = Object.entries(manifest.artifacts)
         .filter(
-          ([key, value]: [string, any]) =>
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          ([, value]: [string, any]) =>
             value.type === "aws:cloudformation:stack"
         )
-        .map(([key, value]: [string, any]) => key)[0];
+        .map(([key]: [string, unknown]) => key)[0];
       return stackName;
     }
   }
@@ -30,6 +31,7 @@ export class AmplifyProjectImpl implements AmplifyProject {
   private pathExists(p: string): boolean {
     try {
       fs.accessSync(p);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       return false;
     }
