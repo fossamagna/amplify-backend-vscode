@@ -11,7 +11,10 @@ export function buildUrl(
   }
   const urlBuilder = urlBuilders[stackResource.ResourceType];
   if (urlBuilder) {
-    const region = stackResource.StackId?.split(":")[3]!;
+    const region = stackResource.StackId?.split(":").at(3);
+    if (!region) {
+      return;
+    }
     return urlBuilder(stackResource.PhysicalResourceId!, region);
   }
 }

@@ -7,7 +7,7 @@ export const secretValueInput = async (
 ) => {
   const disposables: vscode.Disposable[] = [];
   try {
-    return await new Promise<void>((resolve, reject) => {
+    return await new Promise<void>((resolve) => {
       const inputBox = vscode.window.createInputBox();
       inputBox.title = "Edit Secret Value";
       inputBox.placeholder = "Enter Secret Value";

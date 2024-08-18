@@ -17,7 +17,7 @@ export const addSecretCommand = async (node: SecretNameTreeItem) => {
 const secretNameInput = async (): Promise<string> => {
   const disposables: vscode.Disposable[] = [];
   try {
-    return await new Promise<string>((resolve, reject) => {
+    return await new Promise<string>((resolve) => {
       const inputBox = vscode.window.createInputBox();
       inputBox.title = "Enter Secret Name";
       inputBox.placeholder = "Enter Secret Name";

@@ -37,7 +37,7 @@ export function activate(context: vscode.ExtensionContext) {
   const amplifyBackendTreeDataProvider = new AmplifyBackendTreeDataProvider(
     rootPath || ""
   );
-  const treeView = vscode.window.createTreeView("amplify-backend-explorer", {
+  vscode.window.createTreeView("amplify-backend-explorer", {
     treeDataProvider: amplifyBackendTreeDataProvider,
   });
   context.subscriptions.push(
@@ -47,12 +47,9 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   const secretsTreeDataProvider = new SecretsTreeDataProvider(rootPath || "");
-  const secretsTreeView = vscode.window.createTreeView(
-    "amplify-backend-secrets-explorer",
-    {
-      treeDataProvider: secretsTreeDataProvider,
-    }
-  );
+  vscode.window.createTreeView("amplify-backend-secrets-explorer", {
+    treeDataProvider: secretsTreeDataProvider,
+  });
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "amplify-backend-secrets-explorer.refresh",
