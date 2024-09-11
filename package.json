@@ -108,6 +108,33 @@
           "name": "Amplify Backend Secrets Explorer"
         }
       ]
+    },
+    "configuration": {
+      "title": "Amplify Backend",
+      "properties": {
+        "amplifyBackend.explorerFilters": {
+          "type": "array",
+          "default": [],
+          "description": "List of filters to apply to the Amplify Backend Explorer",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of filter to apply to the Amplify Backend Explorer"
+              },
+              "resources": {
+                "type": "array",
+                "description": "AWS resource types shown in the Amplify Backend Explorer",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "repository": {
