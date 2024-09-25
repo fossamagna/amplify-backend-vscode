@@ -148,7 +148,7 @@
     "@vscode/test-cli": "^0.0.10",
     "@vscode/test-electron": "^2.4.0",
     "cross-env": "^7.0.3",
-    "esbuild": "^0.23.0",
+    "esbuild": "^0.24.0",
     "eslint": "^9.9.0",
     "execa": "^5.1.1",
     "mocha": "^10.5.1",
