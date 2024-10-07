@@ -12,6 +12,10 @@ import { AmplifyBackendBaseNode } from "./amplify-backend-base-node";
 import { isStackNode } from "./utils";
 import { detectAmplifyProjects } from "./amplify-project-detector";
 import { AmplifyProject, getAmplifyProject } from "../project";
+import {
+  DefaultResourceFilterProvider,
+  ResourceFilterProvider,
+} from "./resource-filter";
 
 export class AmplifyBackendTreeDataProvider
   implements vscode.TreeDataProvider<AmplifyBackendBaseNode>
@@ -23,7 +27,10 @@ export class AmplifyBackendTreeDataProvider
     AmplifyBackendBaseNode | undefined | void
   > = this._onDidChangeTreeData.event;
 
-  constructor(private workspaceRoot: string) {}
+  constructor(
+    private workspaceRoot: string,
+    private resourceFilterProvider: ResourceFilterProvider
+  ) {}
 
   refresh() {
     this._onDidChangeTreeData.fire();
@@ -56,7 +63,8 @@ export class AmplifyBackendTreeDataProvider
     if (!response.StackResources) {
       return [];
     }
-    return response.StackResources.map((resource) => {
+    const predicate = this.resourceFilterProvider.getResourceFilterPredicate();
+    return response.StackResources.filter(predicate).map((resource) => {
       return new AmplifyBackendResourceTreeNode(
         resource.LogicalResourceId!,
         resource.ResourceType!,
@@ -75,7 +83,12 @@ export class AmplifyBackendTreeDataProvider
 
     const children: AmplifyBackendBaseNode[] = [];
     const profile = Auth.instance.getProfile();
-    children.push(new AuthNode(`Connected with profile: ${profile}`, profile));
+    const filterName = this.resourceFilterProvider.getResourceFilterName();
+    const label =
+      filterName === DefaultResourceFilterProvider.NONE_FILTER_NAME
+        ? `Connected with profile: ${profile}`
+        : `Connected with profile ${profile} and resources filtered with ${filterName}`;
+    children.push(new AuthNode(label, profile));
     if (nodes.length) {
       children.push(...nodes);
     } else {

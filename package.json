@@ -28,6 +28,11 @@
         }
       },
       {
+        "command": "amplify-backend-explorer.switchFilter",
+        "title": "Switch Filter",
+        "icon": "$(filter)"
+      },
+      {
         "command": "amplify-backend-explorer.openConsole",
         "title": "Open AWS Console"
       },
@@ -64,6 +69,11 @@
       "view/title": [
         {
           "command": "amplify-backend-explorer.refresh",
+          "when": "view == amplify-backend-explorer",
+          "group": "navigation"
+        },
+        {
+          "command": "amplify-backend-explorer.switchFilter",
           "when": "view == amplify-backend-explorer",
           "group": "navigation"
         },

@@ -1,5 +1,9 @@
 import type { StackResource } from "@aws-sdk/client-cloudformation";
 
+export function isSupportedResourceType(resourceType: string) {
+  return urlBuilders[resourceType] !== undefined;
+}
+
 export function buildUrl(
   stackResource: Pick<
     StackResource,
