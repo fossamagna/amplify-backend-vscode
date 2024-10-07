@@ -6,6 +6,7 @@ import { SecretsTreeDataProvider } from "./secrets/secrets-tree-data-provider";
 import { editSecretCommand } from "./secrets/edit-secret-command";
 import { removeSecretCommand } from "./secrets/remove-secret-command";
 import { addSecretCommand } from "./secrets/add-secret-command";
+import { DefaultResourceFilterProvider } from "./explorer/resource-filter";
 
 export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
@@ -34,8 +35,13 @@ export function activate(context: vscode.ExtensionContext) {
       ? vscode.workspace.workspaceFolders[0].uri.fsPath
       : undefined;
 
+  const resourceFilterProvider = new DefaultResourceFilterProvider(
+    context.workspaceState
+  );
+
   const amplifyBackendTreeDataProvider = new AmplifyBackendTreeDataProvider(
-    rootPath || ""
+    rootPath || "",
+    resourceFilterProvider
   );
   vscode.window.createTreeView("amplify-backend-explorer", {
     treeDataProvider: amplifyBackendTreeDataProvider,
@@ -96,6 +102,26 @@ export function activate(context: vscode.ExtensionContext) {
           if (selection[0]) {
             Auth.instance.setProfile(selection[0].label);
             quickPick.hide();
+          }
+        });
+        quickPick.onDidHide(() => quickPick.dispose());
+        quickPick.show();
+      }
+    )
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "amplify-backend-explorer.switchFilter",
+      async () => {
+        const names = resourceFilterProvider.getResourceFilterNames();
+        const quickPick = vscode.window.createQuickPick();
+        quickPick.items = names.map((label) => ({ label }));
+        quickPick.onDidChangeSelection((selection) => {
+          if (selection[0]) {
+            resourceFilterProvider.setResourceFilterName(selection[0].label);
+            quickPick.hide();
+            amplifyBackendTreeDataProvider.refresh();
           }
         });
         quickPick.onDidHide(() => quickPick.dispose());
