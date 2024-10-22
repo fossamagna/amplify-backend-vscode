@@ -1,4 +1,6 @@
 import type { BackendIdentifier } from "@aws-amplify/plugin-types";
+import Auth from "../auth/credentials";
+import { fromIni } from "@aws-sdk/credential-providers";
 
 export interface AmplifySecrets {
   getSecret(secretName: string): Promise<SecretItem>;
@@ -25,8 +27,16 @@ export class AmplifyBackendSecret implements AmplifySecrets {
   }
 
   private async getBackendSecretClient() {
+    const profile = Auth.instance.getProfile();
+    const credentials = fromIni({
+      profile,
+    });
+    const region = await Auth.instance.getRegion(profile);
     const backendSecret = import("@aws-amplify/backend-secret");
-    const secretClient = (await backendSecret).getSecretClient();
+    const secretClient = (await backendSecret).getSecretClient({
+      credentials,
+      region,
+    });
     return secretClient;
   }
 
