@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.5.0
+
+### Minor Changes
+
+- [#139](https://github.com/fossamagna/amplify-backend-vscode/pull/139) [`fb1be66`](https://github.com/fossamagna/amplify-backend-vscode/commit/fb1be66ec5cd900bd0374f97aee939ba2f2d896b) Thanks [@fossamagna](https://github.com/fossamagna)! - feat: add resource filters on resource explorer
+
+### Patch Changes
+
+- [#162](https://github.com/fossamagna/amplify-backend-vscode/pull/162) [`52dc274`](https://github.com/fossamagna/amplify-backend-vscode/commit/52dc27413d42a248b3fd1187cfd5850841f97584) Thanks [@fossamagna](https://github.com/fossamagna)! - fix: provide region to AWS SDK SecretClient from config file
+
 ## 0.4.0
 
 ### Minor Changes
