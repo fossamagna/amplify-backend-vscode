@@ -4,7 +4,6 @@ import {
   DescribeStackResourcesCommand,
 } from "@aws-sdk/client-cloudformation";
 import { fromIni } from "@aws-sdk/credential-providers";
-import type { BackendIdentifier } from "@aws-amplify/plugin-types";
 import { AmplifyBackendResourceTreeNode } from "./amplify-backend-resource-tree-node";
 import Auth from "../auth/credentials";
 import { AuthNode } from "./auth-node";
@@ -16,6 +15,10 @@ import {
   DefaultResourceFilterProvider,
   ResourceFilterProvider,
 } from "./resource-filter";
+import { IdentifierTreeItem } from "./identifier-tree-item";
+import { SecretNameTreeItem } from "./secret-name-tree-item";
+import { AmplifyBackendSecret } from "../secrets/amplify-secrets";
+import { SecretListTreeItem } from "./secret-list-tree-item";
 
 export class AmplifyBackendTreeDataProvider
   implements vscode.TreeDataProvider<AmplifyBackendBaseNode>
@@ -43,7 +46,7 @@ export class AmplifyBackendTreeDataProvider
   }
 
   private async getStackResources(
-    backendIdentifier: BackendIdentifier,
+    amplifyProject: AmplifyProject,
     stackName: string
   ): Promise<AmplifyBackendBaseNode[]> {
     const profile = Auth.instance.getProfile();
@@ -68,7 +71,7 @@ export class AmplifyBackendTreeDataProvider
       return new AmplifyBackendResourceTreeNode(
         resource.LogicalResourceId!,
         resource.ResourceType!,
-        backendIdentifier,
+        amplifyProject,
         resource
       );
     });
@@ -78,8 +81,8 @@ export class AmplifyBackendTreeDataProvider
     const projects = await detectAmplifyProjects(this.workspaceRoot);
     const nodes = projects
       .map((project) => getAmplifyProject(project))
-      .map((project) => this.getResourcesInAmplifyProject(project))
-      .filter((node): node is AmplifyBackendBaseNode => !!node);
+      .map((project) => this.getAmplifyProjectNode(project))
+      .filter((node) => !!node);
 
     const children: AmplifyBackendBaseNode[] = [];
     const profile = Auth.instance.getProfile();
@@ -103,17 +106,40 @@ export class AmplifyBackendTreeDataProvider
     element?: AmplifyBackendBaseNode
   ): vscode.ProviderResult<AmplifyBackendBaseNode[]> {
     if (element) {
-      if (isStackNode(element)) {
+      if (element instanceof IdentifierTreeItem) {
+        return this.getChildrenOfAmplifyProject(element);
+      } else if (isStackNode(element)) {
         return this.getStackResources(
-          element.backendIdentifier,
-          element.resource?.PhysicalResourceId ?? element.label
+          element.amplifyProject,
+          element.resource?.PhysicalResourceId ??
+            element.amplifyProject.getStackName()!
         );
+      } else if (element instanceof SecretListTreeItem) {
+        return this.getSecretList(element.amplifyProject);
       } else {
         return [];
       }
     } else {
       return this.getRootChildren();
     }
+  }
+
+  private getAmplifyProjectNode(amplifyProject: AmplifyProject) {
+    return new IdentifierTreeItem(
+      amplifyProject,
+      vscode.TreeItemCollapsibleState.Collapsed
+    );
+  }
+
+  private getChildrenOfAmplifyProject(element: IdentifierTreeItem) {
+    const node = this.getResourcesInAmplifyProject(element.amplifyProject);
+    const secretList = new SecretListTreeItem(element.amplifyProject);
+    const nodes = [];
+    if (node) {
+      nodes.push(node);
+    }
+    nodes.push(secretList);
+    return nodes;
   }
 
   private getResourcesInAmplifyProject(
@@ -123,10 +149,26 @@ export class AmplifyBackendTreeDataProvider
     const backendIdentifier = amplifyProject.getBackendIdentifier();
     if (stackName && backendIdentifier) {
       return new AmplifyBackendResourceTreeNode(
-        stackName,
+        "Resources",
         "AWS::CloudFormation::Stack",
-        backendIdentifier
+        amplifyProject
       );
     }
+  }
+
+  private async getSecretList(
+    amplifyProject: AmplifyProject
+  ): Promise<SecretNameTreeItem[]> {
+    const secretsClient = new AmplifyBackendSecret(
+      amplifyProject.getBackendIdentifier()!
+    );
+    const secretsList = await secretsClient.listSecrets();
+    return secretsList.map((name) => {
+      return new SecretNameTreeItem(
+        amplifyProject,
+        name,
+        vscode.TreeItemCollapsibleState.None
+      );
+    });
   }
 }

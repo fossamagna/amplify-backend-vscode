@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import Auth from "./auth/credentials";
 import { AmplifyBackendTreeDataProvider } from "./explorer/amplify-backend-tree-data-provider";
 import { AmplifyBackendResourceTreeNode } from "./explorer/amplify-backend-resource-tree-node";
-import { SecretsTreeDataProvider } from "./secrets/secrets-tree-data-provider";
+//import { SecretsTreeDataProvider } from "./secrets/secrets-tree-data-provider";
 import { editSecretCommand } from "./secrets/edit-secret-command";
 import { removeSecretCommand } from "./secrets/remove-secret-command";
 import { addSecretCommand } from "./secrets/add-secret-command";
@@ -52,35 +52,35 @@ export function activate(context: vscode.ExtensionContext) {
     })
   );
 
-  const secretsTreeDataProvider = new SecretsTreeDataProvider(rootPath || "");
-  vscode.window.createTreeView("amplify-backend-secrets-explorer", {
-    treeDataProvider: secretsTreeDataProvider,
-  });
+  // const secretsTreeDataProvider = new SecretsTreeDataProvider(rootPath || "");
+  // vscode.window.createTreeView("amplify-backend-explorer", {
+  //   treeDataProvider: secretsTreeDataProvider,
+  // });
+  // context.subscriptions.push(
+  //   vscode.commands.registerCommand(
+  //     "amplify-backend-explorer.refresh",
+  //     () => amplifyBackendTreeDataProvider.refresh()
+  //   )
+  // );
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "amplify-backend-secrets-explorer.refresh",
-      () => secretsTreeDataProvider.refresh()
-    )
-  );
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "amplify-backend-secrets-explorer.editSecret",
+      "amplify-backend-explorer.editSecret",
       async (node) => {
         await editSecretCommand(node);
       }
     ),
     vscode.commands.registerCommand(
-      "amplify-backend-secrets-explorer.removeSecret",
+      "amplify-backend-explorer.removeSecret",
       async (node) => {
         await removeSecretCommand(node);
-        secretsTreeDataProvider.refresh();
+        amplifyBackendTreeDataProvider.refresh();
       }
     ),
     vscode.commands.registerCommand(
-      "amplify-backend-secrets-explorer.addSecret",
+      "amplify-backend-explorer.addSecret",
       async (node) => {
         await addSecretCommand(node);
-        secretsTreeDataProvider.refresh();
+        amplifyBackendTreeDataProvider.refresh();
       }
     )
   );

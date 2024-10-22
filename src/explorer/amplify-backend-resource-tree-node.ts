@@ -3,13 +3,14 @@ import { StackResource } from "@aws-sdk/client-cloudformation";
 import { AmplifyBackendBaseNode } from "./amplify-backend-base-node";
 import { isStack } from "./utils";
 import { buildUrl, UriComponents } from "../console-url-builder";
-import type { BackendIdentifier } from "@aws-amplify/plugin-types";
+import { AmplifyProject } from "../project";
 
 export class AmplifyBackendResourceTreeNode extends AmplifyBackendBaseNode {
   constructor(
     public readonly label: string,
     public readonly cloudformationType: string,
-    public readonly backendIdentifier: BackendIdentifier,
+    public readonly amplifyProject: AmplifyProject,
+    //public readonly backendIdentifier: BackendIdentifier,
     public readonly resource?: StackResource
   ) {
     super(

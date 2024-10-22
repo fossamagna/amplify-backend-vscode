@@ -41,7 +41,7 @@
         "title": "Switch AWS Profile"
       },
       {
-        "command": "amplify-backend-secrets-explorer.refresh",
+        "command": "amplify-backend-explorer.refresh",
         "title": "Refresh",
         "icon": {
           "light": "resources/light/refresh.svg",
@@ -49,15 +49,15 @@
         }
       },
       {
-        "command": "amplify-backend-secrets-explorer.editSecret",
+        "command": "amplify-backend-explorer.editSecret",
         "title": "Edit secret"
       },
       {
-        "command": "amplify-backend-secrets-explorer.removeSecret",
+        "command": "amplify-backend-explorer.removeSecret",
         "title": "Remove secret"
       },
       {
-        "command": "amplify-backend-secrets-explorer.addSecret",
+        "command": "amplify-backend-explorer.addSecret",
         "title": "Add new secret",
         "icon": {
           "light": "resources/light/add.svg",
@@ -76,16 +76,6 @@
           "command": "amplify-backend-explorer.switchFilter",
           "when": "view == amplify-backend-explorer",
           "group": "navigation"
-        },
-        {
-          "command": "amplify-backend-secrets-explorer.refresh",
-          "when": "view == amplify-backend-secrets-explorer",
-          "group": "navigation"
-        },
-        {
-          "command": "amplify-backend-secrets-explorer.addSecret",
-          "when": "view == amplify-backend-secrets-explorer",
-          "group": "navigation"
         }
       ],
       "view/item/context": [
@@ -98,12 +88,17 @@
           "when": "view == amplify-backend-explorer && viewItem == authNode"
         },
         {
-          "command": "amplify-backend-secrets-explorer.editSecret",
-          "when": "view == amplify-backend-secrets-explorer && viewItem == secretNameNode"
+          "command": "amplify-backend-explorer.addSecret",
+          "when": "view == amplify-backend-explorer && viewItem == secretListNode",
+          "group": "inline"
         },
         {
-          "command": "amplify-backend-secrets-explorer.removeSecret",
-          "when": "view == amplify-backend-secrets-explorer && viewItem == secretNameNode"
+          "command": "amplify-backend-explorer.editSecret",
+          "when": "view == amplify-backend-explorer && viewItem == secretNameNode"
+        },
+        {
+          "command": "amplify-backend-explorer.removeSecret",
+          "when": "view == amplify-backend-explorer && viewItem == secretNameNode"
         }
       ]
     },
@@ -112,10 +107,6 @@
         {
           "id": "amplify-backend-explorer",
           "name": "Amplify Backend Explorer"
-        },
-        {
-          "id": "amplify-backend-secrets-explorer",
-          "name": "Amplify Backend Secrets Explorer"
         }
       ]
     },

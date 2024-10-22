@@ -4,7 +4,7 @@ import { AmplifyBackendBaseNode } from "./amplify-backend-base-node";
 export function isStackNode(
   node: AmplifyBackendBaseNode
 ): node is AmplifyBackendResourceTreeNode {
-  return isStack(node.cloudformationType);
+  return node instanceof AmplifyBackendResourceTreeNode && isStack(node.cloudformationType);
 }
 
 export function isStack(cloudformationType?: string): boolean {
