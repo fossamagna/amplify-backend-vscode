@@ -24,6 +24,4 @@ jobs:
         run: npm ci
 
       - name: Run headless test
-        uses: coactions/setup-xvfb@v1
-        with:
-          run: npm test
+        run: xvfb-run npm test
