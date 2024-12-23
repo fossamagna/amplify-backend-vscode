@@ -116,4 +116,7 @@ const urlBuilders: Record<
       fragment: `/queues/${encodeURIComponent(resourceId)}`,
     };
   },
+  "AWS::Events::EventBus": (physicalResourceId, region) => {
+    return `https://${region}.console.aws.amazon.com/events/home?region=${region}#/eventbus/${physicalResourceId}`;
+  },
 };
