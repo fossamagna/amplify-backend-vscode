@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.6.0
+
+### Minor Changes
+
+- [#228](https://github.com/fossamagna/amplify-backend-vscode/pull/228) [`6596b25`](https://github.com/fossamagna/amplify-backend-vscode/commit/6596b256084395ee221a868d4654b0279c7a431f) Thanks [@fossamagna](https://github.com/fossamagna)! - feat: support `AWS::Events::EventBus` as target to open AWS Console
+
+### Patch Changes
+
+- [#226](https://github.com/fossamagna/amplify-backend-vscode/pull/226) [`a72403c`](https://github.com/fossamagna/amplify-backend-vscode/commit/a72403ce16a5233c00c8467f50ae425fc1c631b5) Thanks [@fossamagna](https://github.com/fossamagna)! - fix: use codicons instead of custom svg files
+
 ## 0.5.0
 
 ### Minor Changes
