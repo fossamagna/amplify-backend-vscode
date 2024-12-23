@@ -102,4 +102,17 @@ describe("Console URL Builder Test Suite", () => {
         "/queues/https%3A%2F%2Fsqs.ap-northeast-1.amazonaws.com%2F123456789012%2Ftest-queue-name.fifo",
     });
   });
+
+  test("AWS::Events::EventBus", () => {
+    const url = buildUrl({
+      ResourceType: "AWS::Events::EventBus",
+      StackId:
+        "arn:aws:cloudformation:ap-northeast-1:123456789012:stack/myteststack/abc",
+      PhysicalResourceId: "amplifyEventBus5866C2C9",
+    });
+    assert.strictEqual(
+      url,
+      "https://ap-northeast-1.console.aws.amazon.com/events/home?region=ap-northeast-1#/eventbus/amplifyEventBus5866C2C9"
+    );
+  });
 });
