@@ -1,31 +1,18 @@
 import * as vscode from "vscode";
 import Auth from "./auth/credentials";
 import { AmplifyBackendTreeDataProvider } from "./explorer/amplify-backend-tree-data-provider";
-import { AmplifyBackendResourceTreeNode } from "./explorer/amplify-backend-resource-tree-node";
 import { SecretsTreeDataProvider } from "./secrets/secrets-tree-data-provider";
 import { editSecretCommand } from "./secrets/edit-secret-command";
 import { removeSecretCommand } from "./secrets/remove-secret-command";
 import { addSecretCommand } from "./secrets/add-secret-command";
 import { DefaultResourceFilterProvider } from "./explorer/resource-filter";
+import { openConsoleCommand } from "./explorer/open-console-command";
 
 export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "amplify-backend-explorer.openConsole",
-      (node: AmplifyBackendResourceTreeNode) => {
-        const { consoleUrl } = node;
-        if (consoleUrl) {
-          const uri =
-            typeof consoleUrl === "string"
-              ? vscode.Uri.parse(consoleUrl)
-              : vscode.Uri.from(consoleUrl);
-          vscode.env.openExternal(uri);
-        } else {
-          vscode.window.showInformationMessage(
-            `Now ${node.cloudformationType} is not supported resource type to open AWS Cosnsole.`
-          );
-        }
-      }
+      openConsoleCommand
     )
   );
 
