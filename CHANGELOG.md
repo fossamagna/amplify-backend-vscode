@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.7.0
+
+### Minor Changes
+
+- [#231](https://github.com/fossamagna/amplify-backend-vscode/pull/231) [`179f705`](https://github.com/fossamagna/amplify-backend-vscode/commit/179f705667d12780109915a91e9b6c2113fe3f29) Thanks [@fossamagna](https://github.com/fossamagna)! - feat: add button `Request Feature` to open GitHub Issue in notification
+
 ## 0.6.0
 
 ### Minor Changes
