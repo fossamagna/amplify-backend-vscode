@@ -6,13 +6,20 @@ import { editSecretCommand } from "./secrets/edit-secret-command";
 import { removeSecretCommand } from "./secrets/remove-secret-command";
 import { addSecretCommand } from "./secrets/add-secret-command";
 import { DefaultResourceFilterProvider } from "./explorer/resource-filter";
-import { openConsoleCommand } from "./explorer/open-console-command";
+import { openConsoleCommand } from "./explorer/commands/open-console-command";
+import { copyUrlCommand } from "./explorer/commands/copy-url-command";
 
 export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "amplify-backend-explorer.openConsole",
       openConsoleCommand
+    )
+  );
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "amplify-backend-explorer.copyUrl",
+      copyUrlCommand
     )
   );
 
