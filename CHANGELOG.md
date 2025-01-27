@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.7.1
+
+### Patch Changes
+
+- [#265](https://github.com/fossamagna/amplify-backend-vscode/pull/265) [`4009362`](https://github.com/fossamagna/amplify-backend-vscode/commit/40093625c3f68bc95afa7e643506c6985d059632) Thanks [@fossamagna](https://github.com/fossamagna)! - fix: avoid duplication URL encoding when copy URL to clipboard
+
 ## 0.7.0
 
 ### Minor Changes
