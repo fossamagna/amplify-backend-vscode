@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.7.2
+
+### Patch Changes
+
+- [#342](https://github.com/fossamagna/amplify-backend-vscode/pull/342) [`a148427`](https://github.com/fossamagna/amplify-backend-vscode/commit/a148427f7750e4a04cd41cee6e38c4b46aa675fc) Thanks [@fossamagna](https://github.com/fossamagna)! - fix: show on tree all resources in the stack
+
 ## 0.7.1
 
 ### Patch Changes
