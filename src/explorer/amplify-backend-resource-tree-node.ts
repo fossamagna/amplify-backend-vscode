@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { StackResource } from "@aws-sdk/client-cloudformation";
+import { StackResourceSummary } from "@aws-sdk/client-cloudformation";
 import { AmplifyBackendBaseNode } from "./amplify-backend-base-node";
 import { isStack } from "./utils";
 import { buildUrl, UriComponents } from "../console-url-builder";
@@ -10,7 +10,7 @@ export class AmplifyBackendResourceTreeNode extends AmplifyBackendBaseNode {
     public readonly label: string,
     public readonly cloudformationType: string,
     public readonly backendIdentifier: BackendIdentifier,
-    public readonly resource?: StackResource
+    public readonly resource?: StackResourceSummary
   ) {
     super(
       label,

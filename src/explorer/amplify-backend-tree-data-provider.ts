@@ -1,7 +1,9 @@
 import * as vscode from "vscode";
 import {
   CloudFormationClient,
-  DescribeStackResourcesCommand,
+  ListStackResourcesCommand,
+  ListStackResourcesCommandInput,
+  StackResourceSummary,
 } from "@aws-sdk/client-cloudformation";
 import { fromIni } from "@aws-sdk/credential-providers";
 import type { BackendIdentifier } from "@aws-amplify/plugin-types";
@@ -18,8 +20,7 @@ import {
 } from "./resource-filter";
 
 export class AmplifyBackendTreeDataProvider
-  implements vscode.TreeDataProvider<AmplifyBackendBaseNode>
-{
+  implements vscode.TreeDataProvider<AmplifyBackendBaseNode> {
   private _onDidChangeTreeData: vscode.EventEmitter<
     AmplifyBackendBaseNode | undefined | void
   > = new vscode.EventEmitter<AmplifyBackendBaseNode | undefined | void>();
@@ -30,7 +31,7 @@ export class AmplifyBackendTreeDataProvider
   constructor(
     private workspaceRoot: string,
     private resourceFilterProvider: ResourceFilterProvider
-  ) {}
+  ) { }
 
   refresh() {
     this._onDidChangeTreeData.fire();
@@ -55,16 +56,23 @@ export class AmplifyBackendTreeDataProvider
       credentials,
       region,
     });
-    const input = {
-      StackName: stackName,
-    };
-    const command = new DescribeStackResourcesCommand(input);
-    const response = await client.send(command);
-    if (!response.StackResources) {
-      return [];
-    }
+    let nextToken: string | undefined;
+    const resources: StackResourceSummary[] = [];
+    do {
+      const input: ListStackResourcesCommandInput = {
+        StackName: stackName,
+        NextToken: nextToken,
+      };
+      const command = new ListStackResourcesCommand(input);
+      const response = await client.send(command);
+      nextToken = response.NextToken;
+      if (!response.StackResourceSummaries) {
+        continue;
+      }
+      resources.push(...response.StackResourceSummaries)
+    } while (nextToken);
     const predicate = this.resourceFilterProvider.getResourceFilterPredicate();
-    return response.StackResources.filter(predicate).map((resource) => {
+    return resources.filter(predicate).map((resource) => {
       return new AmplifyBackendResourceTreeNode(
         resource.LogicalResourceId!,
         resource.ResourceType!,

@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { StackResource } from "@aws-sdk/client-cloudformation";
+import { StackResourceSummary } from "@aws-sdk/client-cloudformation";
 import { isSupportedResourceType } from "../console-url-builder";
 
 export type ResourceFilter = {
@@ -12,16 +12,16 @@ export const getResourceFilters = () => {
   return config.get<ResourceFilter[]>("amplifyBackend.explorerFilters") ?? [];
 };
 
-export type ResourceFilterPredicate = (resource: StackResource) => boolean;
+export type ResourceFilterPredicate = (resource: StackResourceSummary) => boolean;
 
-const stackPredicate = (resource: StackResource) =>
+const stackPredicate = (resource: StackResourceSummary) =>
   "AWS::CloudFormation::Stack" === resource.ResourceType;
 
-const defaultPredicate = (resource: StackResource) =>
+const defaultPredicate = (resource: StackResourceSummary) =>
   isSupportedResourceType(resource.ResourceType!);
 
 const or =
-  (predicates: ResourceFilterPredicate[]) => (resource: StackResource) =>
+  (predicates: ResourceFilterPredicate[]) => (resource: StackResourceSummary) =>
     predicates.some((predicate) => predicate(resource));
 
 const all = () => true;
@@ -72,7 +72,7 @@ export class DefaultResourceFilterProvider implements ResourceFilterProvider {
     }
     return or([
       stackPredicate,
-      (resource: StackResource) =>
+      (resource: StackResourceSummary) =>
         filter.resources.includes(resource.ResourceType!),
     ]);
   }
