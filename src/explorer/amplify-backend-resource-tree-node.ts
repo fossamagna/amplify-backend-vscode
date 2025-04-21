@@ -10,7 +10,8 @@ export class AmplifyBackendResourceTreeNode extends AmplifyBackendBaseNode {
     public readonly label: string,
     public readonly cloudformationType: string,
     public readonly backendIdentifier: BackendIdentifier,
-    public readonly resource?: StackResourceSummary
+    public readonly resource?: StackResourceSummary,
+    public readonly region?: string,
   ) {
     super(
       label,
@@ -27,6 +28,6 @@ export class AmplifyBackendResourceTreeNode extends AmplifyBackendBaseNode {
   }
 
   get consoleUrl(): string | UriComponents | undefined {
-    return this.resource && buildUrl(this.resource);
+    return this.resource && buildUrl({ ...this.resource, region: this.region });
   }
 }

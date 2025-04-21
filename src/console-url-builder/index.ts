@@ -7,19 +7,20 @@ export function isSupportedResourceType(resourceType: string) {
 export function buildUrl(
   stackResource: Pick<
     StackResource,
-    "ResourceType" | "PhysicalResourceId" | "StackId"
-  >
+    "ResourceType" | "PhysicalResourceId"
+  > & {
+    region?: string;
+  }
 ) {
   if (!stackResource.ResourceType) {
     return;
   }
   const urlBuilder = urlBuilders[stackResource.ResourceType];
   if (urlBuilder) {
-    const region = stackResource.StackId?.split(":").at(3);
-    if (!region) {
+    if (!stackResource.region) {
       return;
     }
-    return urlBuilder(stackResource.PhysicalResourceId!, region);
+    return urlBuilder(stackResource.PhysicalResourceId!, stackResource.region);
   }
 }
 

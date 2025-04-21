@@ -6,10 +6,9 @@ describe("Console URL Builder Test Suite", () => {
   test("AWS::CloudFormation::Stack", () => {
     const url = buildUrl({
       ResourceType: "AWS::CloudFormation::Stack",
-      StackId:
-        "arn:aws:cloudformation:ap-northeast-1:123456789012:stack/myteststack/abc",
       PhysicalResourceId:
         "arn:aws:cloudformation:ap-northeast-1:123456789012:stack/amplify-amplifyvitereacttemplate-fossamagna-sandbox-5f9286339c-data123456-Q4HYM3CGZQQQ/b32ba610-2941-11ef-9062-061f906d3db3",
+      region: "ap-northeast-1",
     });
     assert.strictEqual(
       url,
@@ -20,10 +19,9 @@ describe("Console URL Builder Test Suite", () => {
   test("AWS::AppSync::Resolver", () => {
     const url = buildUrl({
       ResourceType: "AWS::AppSync::Resolver",
-      StackId:
-        "arn:aws:cloudformation:ap-northeast-1:123456789012:stack/myteststack/abc",
       PhysicalResourceId:
         "arn:aws:appsync:ap-northeast-1:123456789012:apis/abcdefghijklmnopqrstuvwxyz/types/Mutation/resolvers/updateTodo",
+      region: "ap-northeast-1",
     });
     assert.strictEqual(
       url,
@@ -34,9 +32,8 @@ describe("Console URL Builder Test Suite", () => {
   test("Custom::AmplifyDynamoDBTable", () => {
     const url = buildUrl({
       ResourceType: "Custom::AmplifyDynamoDBTable",
-      StackId:
-        "arn:aws:cloudformation:ap-northeast-1:123456789012:stack/myteststack/abc",
       PhysicalResourceId: "Todo-1234567890-NOE",
+      region: "ap-northeast-1",
     });
     assert.strictEqual(
       url,
@@ -47,10 +44,9 @@ describe("Console URL Builder Test Suite", () => {
   test("AWS::StepFunctions::StateMachine", () => {
     const url = buildUrl({
       ResourceType: "AWS::StepFunctions::StateMachine",
-      StackId:
-        "arn:aws:cloudformation:ap-northeast-1:123456789012:stack/myteststack/abc",
       PhysicalResourceId:
         "arn:aws:states:ap-northeast-1:123456789012:stateMachine:AmplifyTableWaiterStateMachine01234567-aBcDeFgHiJkLmNoPqRsT",
+      region: "ap-northeast-1",
     });
     assert.strictEqual(
       url,
@@ -61,10 +57,9 @@ describe("Console URL Builder Test Suite", () => {
   test("AWS::AppSync::GraphQLApi", () => {
     const url = buildUrl({
       ResourceType: "AWS::AppSync::GraphQLApi",
-      StackId:
-        "arn:aws:cloudformation:ap-northeast-1:123456789012:stack/myteststack/abc",
       PhysicalResourceId:
         "arn:aws:appsync:ap-northeast-1:767397698580:apis/0123456789abcdefghijklmnop",
+      region: "ap-northeast-1",
     });
     assert.strictEqual(
       url,
@@ -75,9 +70,8 @@ describe("Console URL Builder Test Suite", () => {
   test("AWS::AppSync::GraphQLSchema", () => {
     const url = buildUrl({
       ResourceType: "AWS::AppSync::GraphQLSchema",
-      StackId:
-        "arn:aws:cloudformation:ap-northeast-1:123456789012:stack/myteststack/abc",
       PhysicalResourceId: "0123456789abcdefghijklmnopGraphQLSchema",
+      region: "ap-northeast-1",
     });
     assert.strictEqual(
       url,
@@ -88,10 +82,9 @@ describe("Console URL Builder Test Suite", () => {
   test("AWS::SQS::Queue", () => {
     const url = buildUrl({
       ResourceType: "AWS::SQS::Queue",
-      StackId:
-        "arn:aws:cloudformation:ap-northeast-1:123456789012:stack/myteststack/abc",
       PhysicalResourceId:
         "https://sqs.ap-northeast-1.amazonaws.com/123456789012/test-queue-name.fifo",
+      region: "ap-northeast-1",
     });
     assert.deepEqual(url, {
       scheme: "https",
@@ -106,9 +99,8 @@ describe("Console URL Builder Test Suite", () => {
   test("AWS::Events::EventBus", () => {
     const url = buildUrl({
       ResourceType: "AWS::Events::EventBus",
-      StackId:
-        "arn:aws:cloudformation:ap-northeast-1:123456789012:stack/myteststack/abc",
       PhysicalResourceId: "amplifyEventBus5866C2C9",
+      region: "ap-northeast-1",
     });
     assert.strictEqual(
       url,
