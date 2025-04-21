@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.7.3
+
+### Patch Changes
+
+- [#346](https://github.com/fossamagna/amplify-backend-vscode/pull/346) [`1fbf988`](https://github.com/fossamagna/amplify-backend-vscode/commit/1fbf988c305ea8dd251984353ba1038863cbfefe) Thanks [@fossamagna](https://github.com/fossamagna)! - fix: cannot open supported resource types
+
 ## 0.7.2
 
 ### Patch Changes
