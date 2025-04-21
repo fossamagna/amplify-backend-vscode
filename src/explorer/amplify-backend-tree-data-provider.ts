@@ -77,7 +77,8 @@ export class AmplifyBackendTreeDataProvider
         resource.LogicalResourceId!,
         resource.ResourceType!,
         backendIdentifier,
-        resource
+        resource,
+        region,
       );
     });
   }
