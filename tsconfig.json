@@ -5,6 +5,9 @@
 		"lib": [
 			"ES2022"
 		],
+		// Skip type definition checks because @aws-cdk/toolkit-lib type definition checks cause errors.
+    // Do not skip type definition check if error is resolved.
+		"skipLibCheck": true,
 		"sourceMap": true,
 		"rootDir": "src",
 		"strict": true   /* enable all strict type-checking options */
