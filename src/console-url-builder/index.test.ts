@@ -107,4 +107,16 @@ describe("Console URL Builder Test Suite", () => {
       "https://ap-northeast-1.console.aws.amazon.com/events/home?region=ap-northeast-1#/eventbus/amplifyEventBus5866C2C9"
     );
   });
+
+  test("AWS::Scheduler::Schedule", () => {
+    const url = buildUrl({
+      ResourceType: "AWS::Scheduler::Schedule",
+      PhysicalResourceId: "amplify-schedule-1234567890",
+      region: "ap-northeast-1",
+    });
+    assert.strictEqual(
+      url,
+      "https://ap-northeast-1.console.aws.amazon.com/scheduler/home?region=ap-northeast-1#schedules/default/amplify-schedule-1234567890"
+    );
+  });
 });
