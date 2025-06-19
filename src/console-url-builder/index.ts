@@ -120,4 +120,7 @@ const urlBuilders: Record<
   "AWS::Events::EventBus": (physicalResourceId, region) => {
     return `https://${region}.console.aws.amazon.com/events/home?region=${region}#/eventbus/${physicalResourceId}`;
   },
+  "AWS::Scheduler::Schedule": (physicalResourceId, region) => {
+    return `https://${region}.console.aws.amazon.com/scheduler/home?region=${region}#schedules/default/${physicalResourceId}`;
+  }
 };
