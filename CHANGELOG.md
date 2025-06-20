@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.8.0
+
+### Minor Changes
+
+- [#415](https://github.com/fossamagna/amplify-backend-vscode/pull/415) [`8ec72e5`](https://github.com/fossamagna/amplify-backend-vscode/commit/8ec72e52ffd9c587f5b95667e82c2205d463a7b2) Thanks [@fossamagna](https://github.com/fossamagna)! - feat: add support for AWS::CloudWatch::Alarm resource type
+
+- [#413](https://github.com/fossamagna/amplify-backend-vscode/pull/413) [`3ece99f`](https://github.com/fossamagna/amplify-backend-vscode/commit/3ece99fa8186faadfa3d57ce4c7901aba6a5287d) Thanks [@fossamagna](https://github.com/fossamagna)! - feat: add support for AWS::Scheduler::Schedule resource type
+
 ## 0.7.3
 
 ### Patch Changes
