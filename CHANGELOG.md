@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.9.0
+
+### Minor Changes
+
+- [#449](https://github.com/fossamagna/amplify-backend-vscode/pull/449) [`f638484`](https://github.com/fossamagna/amplify-backend-vscode/commit/f638484eeb946a66cd8b2e63e4816414939ef053) Thanks [@fossamagna](https://github.com/fossamagna)! - feat: add support for `AWS::VerifiedPermissions::PolicyStore` resource type
+
 ## 0.8.0
 
 ### Minor Changes
