@@ -124,7 +124,9 @@ const urlBuilders: Record<
     return `https://${region}.console.aws.amazon.com/scheduler/home?region=${region}#schedules/default/${physicalResourceId}`;
   },
   "AWS::CloudWatch::Alarm": (physicalResourceId, region) => {
-    // https://767397698580-5futwfws.ap-northeast-1.console.aws.amazon.com/cloudwatch/home?region=ap-northeast-1#alarmsV2:alarm/amplify-d1oymo68lxar6e-dev-branch-80d5bdb9f8-AlarmStack084E63FE-1K786V0VQOQ79-SystemAlarmgeminiTranscribeJobTimedOutAlarm85FD527D-qV6tkjc2KD7r
     return `https://${region}.console.aws.amazon.com/cloudwatch/home?region=${region}#alarmsV2:alarm/${physicalResourceId}`;
-  }
+  },
+  "AWS::VerifiedPermissions::PolicyStore": (physicalResourceId, region) => {
+    return `https://${region}.console.aws.amazon.com/verifiedpermissions/${physicalResourceId}/overview?region=${region}`;
+  },
 };

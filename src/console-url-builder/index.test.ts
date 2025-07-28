@@ -131,4 +131,16 @@ describe("Console URL Builder Test Suite", () => {
       "https://ap-northeast-1.console.aws.amazon.com/cloudwatch/home?region=ap-northeast-1#alarmsV2:alarm/amplifyAlarm1234567890"
     );
   });
+
+  test("AWS::VerifiedPermissions::PolicyStore", () => {
+    const url = buildUrl({
+      ResourceType: "AWS::VerifiedPermissions::PolicyStore",
+      PhysicalResourceId: "policy-store-1234567890",
+      region: "ap-northeast-1",
+    });
+    assert.strictEqual(
+      url,
+      "https://ap-northeast-1.console.aws.amazon.com/verifiedpermissions/policy-store-1234567890/overview?region=ap-northeast-1"
+    );
+  });
 });
