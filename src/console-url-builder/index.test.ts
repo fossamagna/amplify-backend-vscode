@@ -120,6 +120,18 @@ describe("Console URL Builder Test Suite", () => {
     );
   });
 
+  test("AWS::CloudWatch::Alarm", () => {
+    const url = buildUrl({
+      ResourceType: "AWS::CloudWatch::Alarm",
+      PhysicalResourceId: "amplifyAlarm1234567890",
+      region: "ap-northeast-1",
+    });
+    assert.strictEqual(
+      url,
+      "https://ap-northeast-1.console.aws.amazon.com/cloudwatch/home?region=ap-northeast-1#alarmsV2:alarm/amplifyAlarm1234567890"
+    );
+  });
+
   test("AWS::VerifiedPermissions::PolicyStore", () => {
     const url = buildUrl({
       ResourceType: "AWS::VerifiedPermissions::PolicyStore",

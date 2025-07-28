@@ -3,7 +3,7 @@
   "publisher": "fossamagna",
   "displayName": "AWS Amplify Backend",
   "description": "VSCode Extension to explore Amplify Gen2 backend resources",
-  "version": "0.7.3",
+  "version": "0.8.0",
   "license": "Apache-2.0",
   "engines": {
     "vscode": "^1.90.0"
@@ -178,11 +178,11 @@
     "@changesets/cli": "^2.27.5",
     "@eslint/js": "^9.9.0",
     "@types/mocha": "^10.0.7",
-    "@types/node": "20.x",
+    "@types/node": "22.x",
     "@types/vscode": "^1.90.0",
     "@vscode/test-cli": "^0.0.11",
     "@vscode/test-electron": "^2.4.0",
-    "cross-env": "^7.0.3",
+    "cross-env": "^10.0.0",
     "esbuild": "^0.25.0",
     "eslint": "^9.9.0",
     "execa": "^9.0.0",

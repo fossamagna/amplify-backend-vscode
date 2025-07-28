@@ -123,7 +123,10 @@ const urlBuilders: Record<
   "AWS::Scheduler::Schedule": (physicalResourceId, region) => {
     return `https://${region}.console.aws.amazon.com/scheduler/home?region=${region}#schedules/default/${physicalResourceId}`;
   },
+  "AWS::CloudWatch::Alarm": (physicalResourceId, region) => {
+    return `https://${region}.console.aws.amazon.com/cloudwatch/home?region=${region}#alarmsV2:alarm/${physicalResourceId}`;
+  },
   "AWS::VerifiedPermissions::PolicyStore": (physicalResourceId, region) => {
     return `https://${region}.console.aws.amazon.com/verifiedpermissions/${physicalResourceId}/overview?region=${region}`;
-  }
+  },
 };
