@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.10.0
+
+### Minor Changes
+
+- [#493](https://github.com/fossamagna/amplify-backend-vscode/pull/493) [`4bf616e`](https://github.com/fossamagna/amplify-backend-vscode/commit/4bf616e11e6e595dfcb3939ac01a784549102051) Thanks [@fossamagna](https://github.com/fossamagna)! - feat: add support for `AWS::ApiGatewayV2::Api` resource type
+
 ## 0.9.0
 
 ### Minor Changes
