@@ -129,4 +129,7 @@ const urlBuilders: Record<
   "AWS::VerifiedPermissions::PolicyStore": (physicalResourceId, region) => {
     return `https://${region}.console.aws.amazon.com/verifiedpermissions/${physicalResourceId}/overview?region=${region}`;
   },
+  "AWS::ApiGatewayV2::Api": (physicalResourceId, region) => {
+    return `https://${region}.console.aws.amazon.com/apigateway/main/api-detail?api=${physicalResourceId}&region=${region}`;
+  },
 };
