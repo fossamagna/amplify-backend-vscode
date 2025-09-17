@@ -143,4 +143,16 @@ describe("Console URL Builder Test Suite", () => {
       "https://ap-northeast-1.console.aws.amazon.com/verifiedpermissions/policy-store-1234567890/overview?region=ap-northeast-1"
     );
   });
+
+  test("AWS::ApiGatewayV2::Api", () => {
+    const url = buildUrl({
+      ResourceType: "AWS::ApiGatewayV2::Api",
+      PhysicalResourceId: "a1b2c3d4e5",
+      region: "ap-northeast-1",
+    });
+    assert.strictEqual(
+      url,
+      "https://ap-northeast-1.console.aws.amazon.com/apigateway/main/api-detail?api=a1b2c3d4e5&region=ap-northeast-1"
+    );
+  });
 });
