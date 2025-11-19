@@ -41,6 +41,18 @@ describe("Console URL Builder Test Suite", () => {
     );
   });
 
+  test("AWS::DynamoDB::Table", () => {
+    const url = buildUrl({
+      ResourceType: "AWS::DynamoDB::Table",
+      PhysicalResourceId: "Todo-1234567890-NOE",
+      region: "ap-northeast-1",
+    });
+    assert.strictEqual(
+      url,
+      "https://ap-northeast-1.console.aws.amazon.com/dynamodbv2/home?region=ap-northeast-1#table?name=Todo-1234567890-NOE&tab=overview"
+    );
+  });
+
   test("AWS::StepFunctions::StateMachine", () => {
     const url = buildUrl({
       ResourceType: "AWS::StepFunctions::StateMachine",
