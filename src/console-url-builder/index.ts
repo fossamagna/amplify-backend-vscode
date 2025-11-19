@@ -107,6 +107,10 @@ const urlBuilders: Record<
     const tableName = physicalResourceId;
     return `https://${region}.console.aws.amazon.com/dynamodbv2/home?region=${region}#table?name=${tableName}&tab=overview`;
   },
+  "AWS::DynamoDB::Table": (physicalResourceId, region) => {
+    const tableName = physicalResourceId;
+    return `https://${region}.console.aws.amazon.com/dynamodbv2/home?region=${region}#table?name=${tableName}&tab=overview`;
+  },
   "AWS::SQS::Queue": (physicalResourceId, region) => {
     const resourceId = physicalResourceId;
     return {
