@@ -10,7 +10,10 @@ export class AmplifyBackendResourceTreeNode extends AmplifyBackendBaseNode {
     public readonly label: string,
     public readonly cloudformationType: string,
     public readonly backendIdentifier: BackendIdentifier,
-    public readonly resource?: StackResourceSummary,
+    public readonly resource?: Pick<
+        StackResourceSummary,
+        "ResourceType" | "PhysicalResourceId"
+      >,
     public readonly region?: string,
   ) {
     super(

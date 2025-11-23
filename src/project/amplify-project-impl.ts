@@ -2,11 +2,38 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { BackendIdentifierConversions } from "@aws-amplify/platform-core";
 import type { AmplifyProject } from "./types";
+import {
+  CloudFormationClient,
+  DescribeStacksCommand,
+} from "@aws-sdk/client-cloudformation";
 
 export class AmplifyProjectImpl implements AmplifyProject {
   private readonly relativeCloudAssemblyLocation = ".amplify/artifacts/cdk.out";
 
-  constructor(private amplifyProjectPath: string) {}
+  constructor(
+    private amplifyProjectPath: string,
+    private client: CloudFormationClient
+  ) { }
+
+  async getStackArn(): Promise<string | undefined> {
+    // Get stack ARN using CloudFormation DescribeStacks API
+    const stackName = this.getStackName();
+    if (!stackName) {
+      return undefined;
+    }
+    const client = this.client;
+    const command = new DescribeStacksCommand({
+      StackName: stackName,
+    });
+    const response = await client.send(command);
+    if (!response.Stacks) {
+      return undefined;
+    }
+    const stack = response.Stacks.find(
+      (s: { StackName?: string }) => s.StackName === stackName
+    );
+    return stack?.StackId;
+  }
 
   getStackName(): string | undefined {
     const manifestJsonPath = this.getManifestJsonPath();
