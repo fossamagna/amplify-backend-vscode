@@ -8,8 +8,9 @@ import { addSecretCommand } from "./secrets/add-secret-command";
 import { DefaultResourceFilterProvider } from "./explorer/resource-filter";
 import { openConsoleCommand } from "./explorer/commands/open-console-command";
 import { copyUrlCommand } from "./explorer/commands/copy-url-command";
+import { getAWSClientProvider } from "./client/provider";
 
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "amplify-backend-explorer.openConsole",
@@ -33,9 +34,11 @@ export function activate(context: vscode.ExtensionContext) {
     context.workspaceState
   );
 
+  const awsClientProvider = await getAWSClientProvider();
   const amplifyBackendTreeDataProvider = new AmplifyBackendTreeDataProvider(
     rootPath || "",
-    resourceFilterProvider
+    resourceFilterProvider,
+    awsClientProvider
   );
   vscode.window.createTreeView("amplify-backend-explorer", {
     treeDataProvider: amplifyBackendTreeDataProvider,
@@ -46,7 +49,10 @@ export function activate(context: vscode.ExtensionContext) {
     })
   );
 
-  const secretsTreeDataProvider = new SecretsTreeDataProvider(rootPath || "");
+  const secretsTreeDataProvider = new SecretsTreeDataProvider(
+    rootPath || "",
+    awsClientProvider
+  );
   vscode.window.createTreeView("amplify-backend-secrets-explorer", {
     treeDataProvider: secretsTreeDataProvider,
   });

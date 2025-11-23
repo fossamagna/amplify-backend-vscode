@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { AmplifyBackendSecret } from "./amplify-secrets";
 import { detectAmplifyProjects } from "../explorer/amplify-project-detector";
 import { AmplifyProject, getAmplifyProject } from "../project";
+import { AWSClientProvider } from "../client/provider";
 
 export abstract class SecretsTreeItem extends vscode.TreeItem {
   constructor(
@@ -41,7 +42,10 @@ export class SecretsTreeDataProvider
     SecretsTreeItem | undefined | void
   > = new vscode.EventEmitter<SecretsTreeItem | undefined | void>();
 
-  constructor(private workspaceRoot: string) {}
+  constructor(
+    private workspaceRoot: string,
+    private awsClientProvider: AWSClientProvider
+  ) {}
 
   onDidChangeTreeData = this._onDidChangeTreeData.event;
 
@@ -68,9 +72,11 @@ export class SecretsTreeDataProvider
   }
 
   private async getRootChildren(): Promise<SecretsTreeItem[]> {
+    const cloudFormationClient =
+      await this.awsClientProvider.getCloudFormationClient();
     const projects = await detectAmplifyProjects(this.workspaceRoot);
     const amplifyProjects = projects
-      .map((project) => getAmplifyProject(project))
+      .map((project) => getAmplifyProject(project, cloudFormationClient))
       .filter((project) => !!project.getBackendIdentifier());
     return amplifyProjects.map(
       (amplifyProject) =>

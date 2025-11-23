@@ -1,11 +1,9 @@
 import * as vscode from "vscode";
 import {
-  CloudFormationClient,
   ListStackResourcesCommand,
   ListStackResourcesCommandInput,
   StackResourceSummary,
 } from "@aws-sdk/client-cloudformation";
-import { fromIni } from "@aws-sdk/credential-providers";
 import type { BackendIdentifier } from "@aws-amplify/plugin-types";
 import { AmplifyBackendResourceTreeNode } from "./amplify-backend-resource-tree-node";
 import Auth from "../auth/credentials";
@@ -18,9 +16,11 @@ import {
   DefaultResourceFilterProvider,
   ResourceFilterProvider,
 } from "./resource-filter";
+import { AWSClientProvider } from "../client/provider";
 
 export class AmplifyBackendTreeDataProvider
-  implements vscode.TreeDataProvider<AmplifyBackendBaseNode> {
+  implements vscode.TreeDataProvider<AmplifyBackendBaseNode>
+{
   private _onDidChangeTreeData: vscode.EventEmitter<
     AmplifyBackendBaseNode | undefined | void
   > = new vscode.EventEmitter<AmplifyBackendBaseNode | undefined | void>();
@@ -30,8 +30,9 @@ export class AmplifyBackendTreeDataProvider
 
   constructor(
     private workspaceRoot: string,
-    private resourceFilterProvider: ResourceFilterProvider
-  ) { }
+    private resourceFilterProvider: ResourceFilterProvider,
+    private awsClientProvider: AWSClientProvider,
+  ) {}
 
   refresh() {
     this._onDidChangeTreeData.fire();
@@ -45,17 +46,10 @@ export class AmplifyBackendTreeDataProvider
 
   private async getStackResources(
     backendIdentifier: BackendIdentifier,
-    stackName: string
+    stackName: string,
+    region?: string,
   ): Promise<AmplifyBackendBaseNode[]> {
-    const profile = Auth.instance.getProfile();
-    const credentials = fromIni({
-      profile,
-    });
-    const region = await Auth.instance.getRegion(profile);
-    const client = new CloudFormationClient({
-      credentials,
-      region,
-    });
+    const client = await this.awsClientProvider.getCloudFormationClient();
     let nextToken: string | undefined;
     const resources: StackResourceSummary[] = [];
     do {
@@ -69,7 +63,7 @@ export class AmplifyBackendTreeDataProvider
       if (!response.StackResourceSummaries) {
         continue;
       }
-      resources.push(...response.StackResourceSummaries)
+      resources.push(...response.StackResourceSummaries);
     } while (nextToken);
     const predicate = this.resourceFilterProvider.getResourceFilterPredicate();
     return resources.filter(predicate).map((resource) => {
@@ -84,11 +78,19 @@ export class AmplifyBackendTreeDataProvider
   }
 
   private async getRootChildren() {
+    const client = await this.awsClientProvider.getCloudFormationClient();
     const projects = await detectAmplifyProjects(this.workspaceRoot);
-    const nodes = projects
-      .map((project) => getAmplifyProject(project))
-      .map((project) => this.getResourcesInAmplifyProject(project))
-      .filter((node): node is AmplifyBackendBaseNode => !!node);
+    const amplifyNodes = await Promise.allSettled(
+      projects
+        .map((project) => getAmplifyProject(project, client))
+        .map((project) => this.getResourcesInAmplifyProject(project))
+    );
+    const nodes = amplifyNodes
+      .filter(
+        (result): result is PromiseFulfilledResult<AmplifyBackendBaseNode> =>
+          result.status === "fulfilled" && !!result.value
+      )
+      .map((result) => result.value);
 
     const children: AmplifyBackendBaseNode[] = [];
     const profile = Auth.instance.getProfile();
@@ -115,7 +117,8 @@ export class AmplifyBackendTreeDataProvider
       if (isStackNode(element)) {
         return this.getStackResources(
           element.backendIdentifier,
-          element.resource?.PhysicalResourceId ?? element.label
+          element.resource?.PhysicalResourceId ?? element.label,
+          element.region
         );
       } else {
         return [];
@@ -125,16 +128,23 @@ export class AmplifyBackendTreeDataProvider
     }
   }
 
-  private getResourcesInAmplifyProject(
+  private async getResourcesInAmplifyProject(
     amplifyProject: AmplifyProject
-  ): AmplifyBackendBaseNode | undefined {
+  ): Promise<AmplifyBackendBaseNode | undefined> {
     const stackName = amplifyProject.getStackName();
     const backendIdentifier = amplifyProject.getBackendIdentifier();
+    const stackArn = await amplifyProject.getStackArn();
+    const region = /arn:aws:cloudformation:([^:]+):/.exec(stackArn ?? "")?.[1];
     if (stackName && backendIdentifier) {
       return new AmplifyBackendResourceTreeNode(
         stackName,
         "AWS::CloudFormation::Stack",
-        backendIdentifier
+        backendIdentifier,
+        {
+          PhysicalResourceId: stackArn,
+          ResourceType: "AWS::CloudFormation::Stack",
+        },
+        region
       );
     }
   }
