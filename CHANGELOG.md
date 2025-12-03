@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.11.0
+
+### Minor Changes
+
+- [#573](https://github.com/fossamagna/amplify-backend-vscode/pull/573) [`53146da`](https://github.com/fossamagna/amplify-backend-vscode/commit/53146dad740faf6d279ef2464ded1e70ad3cb081) Thanks [@fossamagna](https://github.com/fossamagna)! - feat: add support to open Amplify app stack with browser
+
+- [#566](https://github.com/fossamagna/amplify-backend-vscode/pull/566) [`97bb30d`](https://github.com/fossamagna/amplify-backend-vscode/commit/97bb30d1ad6d05db83fd3bde2dfeca73b8bccfd6) Thanks [@fossamagna](https://github.com/fossamagna)! - feat: add support for `AWS::DynamoDB::Table` resource type
+
 ## 0.10.0
 
 ### Minor Changes
