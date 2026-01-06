@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.11.1
+
+### Patch Changes
+
+- [#611](https://github.com/fossamagna/amplify-backend-vscode/pull/611) [`a44aff8`](https://github.com/fossamagna/amplify-backend-vscode/commit/a44aff84c2278c0f9b4eb73e42bd25e0141e28d9) Thanks [@fossamagna](https://github.com/fossamagna)! - fix: resolved an issue where the Resource Explorer show nothing when an invalid profile was saved
+
 ## 0.11.0
 
 ### Minor Changes
