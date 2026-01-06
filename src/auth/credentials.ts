@@ -43,7 +43,7 @@ class Auth {
   async getRegion(profile?: string) {
     const sharedConfigFiles = await loadSharedConfigFiles();
     const iniSection = sharedConfigFiles.configFile[profile ?? this.profile];
-    return iniSection.region;
+    return iniSection?.region;
   }
 }
 

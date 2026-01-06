@@ -85,7 +85,9 @@ export async function activate(context: vscode.ExtensionContext) {
     )
   );
 
-  Auth.instance.setProfile(context.workspaceState.get("profile", "default"));
+  const profiles = await Auth.instance.getProfiles();
+  const profile = context.workspaceState.get("profile", profiles[0] || "default");
+  Auth.instance.setProfile(profile);
   Auth.instance.onDidChangeProfile(() => {
     context.workspaceState.update("profile", Auth.instance.getProfile());
     amplifyBackendTreeDataProvider.refresh();
