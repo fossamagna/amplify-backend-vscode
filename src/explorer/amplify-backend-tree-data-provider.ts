@@ -4,6 +4,7 @@ import {
   ListStackResourcesCommandInput,
   StackResourceSummary,
 } from "@aws-sdk/client-cloudformation";
+import { parse } from "@aws-sdk/util-arn-parser";
 import type { BackendIdentifier } from "@aws-amplify/plugin-types";
 import { AmplifyBackendResourceTreeNode } from "./amplify-backend-resource-tree-node";
 import Auth from "../auth/credentials";
@@ -39,7 +40,7 @@ export class AmplifyBackendTreeDataProvider
   }
 
   getTreeItem(
-    element: AmplifyBackendBaseNode
+    element: AmplifyBackendBaseNode,
   ): vscode.TreeItem | Thenable<vscode.TreeItem> {
     return element;
   }
@@ -48,6 +49,7 @@ export class AmplifyBackendTreeDataProvider
     backendIdentifier: BackendIdentifier,
     stackName: string,
     region?: string,
+    accountId?: string,
   ): Promise<AmplifyBackendBaseNode[]> {
     const client = await this.awsClientProvider.getCloudFormationClient();
     let nextToken: string | undefined;
@@ -67,13 +69,14 @@ export class AmplifyBackendTreeDataProvider
     } while (nextToken);
     const predicate = this.resourceFilterProvider.getResourceFilterPredicate();
     return resources.filter(predicate).map((resource) => {
-      return new AmplifyBackendResourceTreeNode(
-        resource.LogicalResourceId!,
-        resource.ResourceType!,
+      return new AmplifyBackendResourceTreeNode({
+        label: resource.LogicalResourceId!,
+        cloudformationType: resource.ResourceType!,
         backendIdentifier,
         resource,
         region,
-      );
+        accountId,
+      });
     });
   }
 
@@ -83,12 +86,12 @@ export class AmplifyBackendTreeDataProvider
     const amplifyNodes = await Promise.allSettled(
       projects
         .map((project) => getAmplifyProject(project, client))
-        .map((project) => this.getResourcesInAmplifyProject(project))
+        .map((project) => this.getResourcesInAmplifyProject(project)),
     );
     const nodes = amplifyNodes
       .filter(
         (result): result is PromiseFulfilledResult<AmplifyBackendBaseNode> =>
-          result.status === "fulfilled" && !!result.value
+          result.status === "fulfilled" && !!result.value,
       )
       .map((result) => result.value);
 
@@ -104,21 +107,22 @@ export class AmplifyBackendTreeDataProvider
       children.push(...nodes);
     } else {
       vscode.window.showInformationMessage(
-        "Workspace has no amplify artifacts in .amplify/artifacts/cdk.out"
+        "Workspace has no amplify artifacts in .amplify/artifacts/cdk.out",
       );
     }
     return Promise.resolve(children);
   }
 
   getChildren(
-    element?: AmplifyBackendBaseNode
+    element?: AmplifyBackendBaseNode,
   ): vscode.ProviderResult<AmplifyBackendBaseNode[]> {
     if (element) {
       if (isStackNode(element)) {
         return this.getStackResources(
           element.backendIdentifier,
           element.resource?.PhysicalResourceId ?? element.label,
-          element.region
+          element.region,
+          element.accountId,
         );
       } else {
         return [];
@@ -129,23 +133,24 @@ export class AmplifyBackendTreeDataProvider
   }
 
   private async getResourcesInAmplifyProject(
-    amplifyProject: AmplifyProject
+    amplifyProject: AmplifyProject,
   ): Promise<AmplifyBackendBaseNode | undefined> {
     const stackName = amplifyProject.getStackName();
     const backendIdentifier = amplifyProject.getBackendIdentifier();
     const stackArn = await amplifyProject.getStackArn();
-    const region = /arn:aws:cloudformation:([^:]+):/.exec(stackArn ?? "")?.[1];
+    const { region, accountId } = parse(stackArn ?? "");
     if (stackName && backendIdentifier) {
-      return new AmplifyBackendResourceTreeNode(
-        stackName,
-        "AWS::CloudFormation::Stack",
+      return new AmplifyBackendResourceTreeNode({
+        label: stackName,
+        cloudformationType: "AWS::CloudFormation::Stack",
         backendIdentifier,
-        {
+        resource: {
           PhysicalResourceId: stackArn,
           ResourceType: "AWS::CloudFormation::Stack",
         },
-        region
-      );
+        region,
+        accountId,
+      });
     }
   }
 }

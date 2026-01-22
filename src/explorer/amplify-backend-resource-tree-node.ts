@@ -6,23 +6,47 @@ import { buildUrl, UriComponents } from "../console-url-builder";
 import type { BackendIdentifier } from "@aws-amplify/plugin-types";
 
 export class AmplifyBackendResourceTreeNode extends AmplifyBackendBaseNode {
-  constructor(
-    public readonly label: string,
-    public readonly cloudformationType: string,
-    public readonly backendIdentifier: BackendIdentifier,
-    public readonly resource?: Pick<
-        StackResourceSummary,
-        "ResourceType" | "PhysicalResourceId"
-      >,
-    public readonly region?: string,
-  ) {
+  public readonly label: string;
+  public readonly cloudformationType: string;
+  public readonly backendIdentifier: BackendIdentifier;
+  public readonly resource?: Pick<
+    StackResourceSummary,
+    "ResourceType" | "PhysicalResourceId"
+  >;
+  public readonly region?: string;
+  public readonly accountId?: string;
+
+  constructor({
+    label,
+    cloudformationType,
+    backendIdentifier,
+    resource,
+    region,
+    accountId,
+  }: {
+    label: string;
+    cloudformationType: string;
+    backendIdentifier: BackendIdentifier;
+    resource?: Pick<
+      StackResourceSummary,
+      "ResourceType" | "PhysicalResourceId"
+    >;
+    region?: string;
+    accountId?: string;
+  }) {
     super(
       label,
       isStack(cloudformationType)
         ? vscode.TreeItemCollapsibleState.Collapsed
         : vscode.TreeItemCollapsibleState.None,
-      cloudformationType
+      cloudformationType,
     );
+    this.label = label;
+    this.cloudformationType = cloudformationType;
+    this.backendIdentifier = backendIdentifier;
+    this.resource = resource;
+    this.region = region;
+    this.accountId = accountId;
     this.tooltip = resource
       ? JSON.stringify(resource, null, 2)
       : `${this.label}-${this.cloudformationType}`;
@@ -31,6 +55,6 @@ export class AmplifyBackendResourceTreeNode extends AmplifyBackendBaseNode {
   }
 
   get consoleUrl(): string | UriComponents | undefined {
-    return this.resource && buildUrl({ ...this.resource, region: this.region });
+    return this.resource && buildUrl({ ...this.resource, region: this.region, accountId: this.accountId });
   }
 }
