@@ -1,16 +1,15 @@
 import type { StackResource } from "@aws-sdk/client-cloudformation";
+import { validate } from "@aws-sdk/util-arn-parser";
 
 export function isSupportedResourceType(resourceType: string) {
   return urlBuilders[resourceType] !== undefined;
 }
 
 export function buildUrl(
-  stackResource: Pick<
-    StackResource,
-    "ResourceType" | "PhysicalResourceId"
-  > & {
+  stackResource: Pick<StackResource, "ResourceType" | "PhysicalResourceId"> & {
     region?: string;
-  }
+    accountId?: string;
+  },
 ) {
   if (!stackResource.ResourceType) {
     return;
@@ -21,6 +20,19 @@ export function buildUrl(
       return;
     }
     return urlBuilder(stackResource.PhysicalResourceId!, stackResource.region);
+  }
+  return buildGoConsoleUrl(stackResource);
+}
+
+function buildGoConsoleUrl(
+  stackResource: Pick<StackResource, "ResourceType" | "PhysicalResourceId"> & {
+    region?: string;
+    accountId?: string;
+  },
+) {
+  const { PhysicalResourceId } = stackResource;
+  if (validate(PhysicalResourceId)) {
+    return `https://console.aws.amazon.com/go/view?arn=${PhysicalResourceId}`;
   }
 }
 
@@ -54,7 +66,7 @@ const urlBuilders: Record<
   "AWS::CloudFormation::Stack": (physicalResourceId, region) => {
     const resourceId = physicalResourceId!;
     return `https://${region}.console.aws.amazon.com/cloudformation/home?region=${region}#/stacks/stackinfo?stackId=${encodeURIComponent(
-      resourceId
+      resourceId,
     )}`;
   },
   "AWS::Cognito::IdentityPool": (physicalResourceId, region) => {

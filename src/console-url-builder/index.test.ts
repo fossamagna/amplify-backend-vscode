@@ -167,4 +167,26 @@ describe("Console URL Builder Test Suite", () => {
       "https://ap-northeast-1.console.aws.amazon.com/apigateway/main/api-detail?api=a1b2c3d4e5&region=ap-northeast-1"
     );
   });
+
+  test("buildGoConsoleUrl with valid ARN", () => {
+    const url = buildUrl({
+      ResourceType: "AWS::SomeUnsupportedType",
+      PhysicalResourceId:
+        "arn:aws:ec2:us-west-2:123456789012:vpc/vpc-0e9801d129EXAMPLE",
+      region: "us-west-2",
+    });
+    assert.strictEqual(
+      url,
+      "https://console.aws.amazon.com/go/view?arn=arn:aws:ec2:us-west-2:123456789012:vpc/vpc-0e9801d129EXAMPLE"
+    );
+  });
+
+  test("buildGoConsoleUrl with invalid ARN", () => {
+    const url = buildUrl({
+      ResourceType: "AWS::SomeUnsupportedType",
+      PhysicalResourceId: "not-a-valid-arn",
+      region: "us-west-2",
+    });
+    assert.strictEqual(url, undefined);
+  });
 });
