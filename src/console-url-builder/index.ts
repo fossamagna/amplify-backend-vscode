@@ -148,4 +148,7 @@ const urlBuilders: Record<
   "AWS::ApiGatewayV2::Api": (physicalResourceId, region) => {
     return `https://${region}.console.aws.amazon.com/apigateway/main/api-detail?api=${physicalResourceId}&region=${region}`;
   },
+  "AWS::BedrockAgentCore::Runtime": (physicalResourceId, region) => {
+    return `https://${region}.console.aws.amazon.com/bedrock-agentcore/agents/${physicalResourceId}`;
+  },
 };

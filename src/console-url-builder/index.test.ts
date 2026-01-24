@@ -168,6 +168,18 @@ describe("Console URL Builder Test Suite", () => {
     );
   });
 
+  test("AWS::BedrockAgentCore::Runtime", () => {
+    const url = buildUrl({
+      ResourceType: "AWS::BedrockAgentCore::Runtime",
+      PhysicalResourceId: "ABCDEFGHIJ",
+      region: "us-east-1",
+    });
+    assert.strictEqual(
+      url,
+      "https://us-east-1.console.aws.amazon.com/bedrock-agentcore/agents/ABCDEFGHIJ"
+    );
+  });
+
   test("buildGoConsoleUrl with valid ARN", () => {
     const url = buildUrl({
       ResourceType: "AWS::SomeUnsupportedType",
