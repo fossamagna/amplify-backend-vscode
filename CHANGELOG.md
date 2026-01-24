@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.13.0
+
+### Minor Changes
+
+- [`0aecc71`](https://github.com/fossamagna/amplify-backend-vscode/commit/0aecc7108b241227c698889e6bcfca718869eb33) Thanks [@fossamagna](https://github.com/fossamagna)! - feat: add support for AWS::BedrockAgentCore::Runtime console URL
+
 ## 0.12.0
 
 ### Minor Changes
