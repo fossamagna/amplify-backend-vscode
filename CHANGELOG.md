@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.12.0
+
+### Minor Changes
+
+- [#633](https://github.com/fossamagna/amplify-backend-vscode/pull/633) [`d37828e`](https://github.com/fossamagna/amplify-backend-vscode/commit/d37828e965980318a35a20d87f8ed02bb71af980) Thanks [@fossamagna](https://github.com/fossamagna)! - feat: support AWS console url using ARN
+
 ## 0.11.1
 
 ### Patch Changes
