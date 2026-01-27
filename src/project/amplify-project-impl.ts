@@ -6,6 +6,7 @@ import {
   CloudFormationClient,
   DescribeStacksCommand,
 } from "@aws-sdk/client-cloudformation";
+import { logger } from "../logger";
 
 export class AmplifyProjectImpl implements AmplifyProject {
   private readonly relativeCloudAssemblyLocation = ".amplify/artifacts/cdk.out";
@@ -21,18 +22,26 @@ export class AmplifyProjectImpl implements AmplifyProject {
     if (!stackName) {
       return undefined;
     }
-    const client = this.client;
-    const command = new DescribeStacksCommand({
-      StackName: stackName,
-    });
-    const response = await client.send(command);
-    if (!response.Stacks) {
+    try {
+      const client = this.client;
+      const command = new DescribeStacksCommand({
+        StackName: stackName,
+      });
+      const response = await client.send(command);
+      if (!response.Stacks) {
+        return undefined;
+      }
+      const stack = response.Stacks.find(
+        (s: { StackName?: string }) => s.StackName === stackName
+      );
+      return stack?.StackId;
+    } catch (error) {
+      logger.error(
+        `Failed to describe stack: ${stackName}`,
+        error instanceof Error ? error : new Error(String(error))
+      );
       return undefined;
     }
-    const stack = response.Stacks.find(
-      (s: { StackName?: string }) => s.StackName === stackName
-    );
-    return stack?.StackId;
   }
 
   getStackName(): string | undefined {

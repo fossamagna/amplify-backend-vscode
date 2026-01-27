@@ -1,6 +1,7 @@
 import type { BackendIdentifier } from "@aws-amplify/plugin-types";
 import Auth from "../auth/credentials";
 import { fromIni } from "@aws-sdk/credential-providers";
+import { logger } from "../logger";
 
 export interface AmplifySecrets {
   getSecret(secretName: string): Promise<SecretItem>;
@@ -41,30 +42,62 @@ export class AmplifyBackendSecret implements AmplifySecrets {
   }
 
   async getSecret(secretName: string): Promise<SecretItem> {
-    const secretClient = await this.getBackendSecretClient();
-    const secret = secretClient.getSecret(this.backendIdentifier, {
-      name: secretName,
-    });
-    return secret;
+    try {
+      const secretClient = await this.getBackendSecretClient();
+      const secret = secretClient.getSecret(this.backendIdentifier, {
+        name: secretName,
+      });
+      return secret;
+    } catch (error) {
+      logger.error(
+        `Failed to get secret: ${secretName}`,
+        error instanceof Error ? error : new Error(String(error))
+      );
+      throw error;
+    }
   }
 
   async setSecret(secretName: string, secretValue: string): Promise<void> {
-    const secretClient = await this.getBackendSecretClient();
-    await secretClient.setSecret(
-      this.backendIdentifier,
-      secretName,
-      secretValue
-    );
+    try {
+      const secretClient = await this.getBackendSecretClient();
+      await secretClient.setSecret(
+        this.backendIdentifier,
+        secretName,
+        secretValue
+      );
+    } catch (error) {
+      logger.error(
+        `Failed to set secret: ${secretName}`,
+        error instanceof Error ? error : new Error(String(error))
+      );
+      throw error;
+    }
   }
 
   async removeSecret(secretName: string): Promise<void> {
-    const secretClient = await this.getBackendSecretClient();
-    await secretClient.removeSecret(this.backendIdentifier, secretName);
+    try {
+      const secretClient = await this.getBackendSecretClient();
+      await secretClient.removeSecret(this.backendIdentifier, secretName);
+    } catch (error) {
+      logger.error(
+        `Failed to remove secret: ${secretName}`,
+        error instanceof Error ? error : new Error(String(error))
+      );
+      throw error;
+    }
   }
 
   async listSecrets(): Promise<string[]> {
-    const secretClient = await this.getBackendSecretClient();
-    const items = await secretClient.listSecrets(this.backendIdentifier);
-    return items.map((item) => item.name);
+    try {
+      const secretClient = await this.getBackendSecretClient();
+      const items = await secretClient.listSecrets(this.backendIdentifier);
+      return items.map((item) => item.name);
+    } catch (error) {
+      logger.error(
+        "Failed to list secrets",
+        error instanceof Error ? error : new Error(String(error))
+      );
+      throw error;
+    }
   }
 }
