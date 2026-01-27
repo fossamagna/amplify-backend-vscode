@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.14.0
+
+### Minor Changes
+
+- [#644](https://github.com/fossamagna/amplify-backend-vscode/pull/644) [`be49dca`](https://github.com/fossamagna/amplify-backend-vscode/commit/be49dca13a47074e10efcf425ea2166cb5c21dbd) Thanks [@fossamagna](https://github.com/fossamagna)! - feat: add log output to the Output panel
+
 ## 0.13.0
 
 ### Minor Changes
