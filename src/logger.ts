@@ -1,18 +1,8 @@
 import * as vscode from "vscode";
 
-type LogLevel = "trace" | "debug" | "info" | "warn" | "error" | "off";
-
 class Logger {
   private static instance: Logger;
   private outputChannel?: vscode.LogOutputChannel;
-  private readonly logLevelOrder: LogLevel[] = [
-    "trace",
-    "debug",
-    "info",
-    "warn",
-    "error",
-    "off",
-  ];
 
   private constructor() {}
 
@@ -33,57 +23,32 @@ class Logger {
     }
   }
 
-  private getLogLevel(): LogLevel {
-    const config = vscode.workspace.getConfiguration();
-    return config.get<LogLevel>("amplifyBackend.logLevel") ?? "info";
-  }
-
-  private shouldLog(level: LogLevel): boolean {
-    const currentLevel = this.getLogLevel();
-    if (currentLevel === "off") {
-      return false;
-    }
-    const currentIndex = this.logLevelOrder.indexOf(currentLevel);
-    const messageIndex = this.logLevelOrder.indexOf(level);
-    return messageIndex >= currentIndex;
-  }
-
   public trace(message: string): void {
     this.ensureInitialized();
-    if (this.shouldLog("trace")) {
-      this.outputChannel!.trace(message);
-    }
+    this.outputChannel!.trace(message);
   }
 
   public debug(message: string): void {
     this.ensureInitialized();
-    if (this.shouldLog("debug")) {
-      this.outputChannel!.debug(message);
-    }
+    this.outputChannel!.debug(message);
   }
 
   public info(message: string): void {
     this.ensureInitialized();
-    if (this.shouldLog("info")) {
-      this.outputChannel!.info(message);
-    }
+    this.outputChannel!.info(message);
   }
 
   public warn(message: string): void {
     this.ensureInitialized();
-    if (this.shouldLog("warn")) {
-      this.outputChannel!.warn(message);
-    }
+    this.outputChannel!.warn(message);
   }
 
   public error(message: string, error?: Error): void {
     this.ensureInitialized();
-    if (this.shouldLog("error")) {
-      if (error) {
-        this.outputChannel!.error(`${message}: ${error.message}`, error);
-      } else {
-        this.outputChannel!.error(message);
-      }
+    if (error) {
+      this.outputChannel!.error(`${message}: ${error.message}`, error);
+    } else {
+      this.outputChannel!.error(message);
     }
   }
 
