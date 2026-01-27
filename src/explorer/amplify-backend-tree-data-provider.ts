@@ -18,6 +18,7 @@ import {
   ResourceFilterProvider,
 } from "./resource-filter";
 import { AWSClientProvider } from "../client/provider";
+import { logger } from "../logger";
 
 export class AmplifyBackendTreeDataProvider
   implements vscode.TreeDataProvider<AmplifyBackendBaseNode>
@@ -36,6 +37,7 @@ export class AmplifyBackendTreeDataProvider
   ) {}
 
   refresh() {
+    logger.debug("AmplifyBackendTreeDataProvider: Refreshing tree view");
     this._onDidChangeTreeData.fire();
   }
 
@@ -51,33 +53,41 @@ export class AmplifyBackendTreeDataProvider
     region?: string,
     accountId?: string,
   ): Promise<AmplifyBackendBaseNode[]> {
-    const client = await this.awsClientProvider.getCloudFormationClient();
-    let nextToken: string | undefined;
-    const resources: StackResourceSummary[] = [];
-    do {
-      const input: ListStackResourcesCommandInput = {
-        StackName: stackName,
-        NextToken: nextToken,
-      };
-      const command = new ListStackResourcesCommand(input);
-      const response = await client.send(command);
-      nextToken = response.NextToken;
-      if (!response.StackResourceSummaries) {
-        continue;
-      }
-      resources.push(...response.StackResourceSummaries);
-    } while (nextToken);
-    const predicate = this.resourceFilterProvider.getResourceFilterPredicate();
-    return resources.filter(predicate).map((resource) => {
-      return new AmplifyBackendResourceTreeNode({
-        label: resource.LogicalResourceId!,
-        cloudformationType: resource.ResourceType!,
-        backendIdentifier,
-        resource,
-        region,
-        accountId,
+    try {
+      const client = await this.awsClientProvider.getCloudFormationClient();
+      let nextToken: string | undefined;
+      const resources: StackResourceSummary[] = [];
+      do {
+        const input: ListStackResourcesCommandInput = {
+          StackName: stackName,
+          NextToken: nextToken,
+        };
+        const command = new ListStackResourcesCommand(input);
+        const response = await client.send(command);
+        nextToken = response.NextToken;
+        if (!response.StackResourceSummaries) {
+          continue;
+        }
+        resources.push(...response.StackResourceSummaries);
+      } while (nextToken);
+      const predicate = this.resourceFilterProvider.getResourceFilterPredicate();
+      return resources.filter(predicate).map((resource) => {
+        return new AmplifyBackendResourceTreeNode({
+          label: resource.LogicalResourceId!,
+          cloudformationType: resource.ResourceType!,
+          backendIdentifier,
+          resource,
+          region,
+          accountId,
+        });
       });
-    });
+    } catch (error) {
+      logger.error(
+        `Failed to list stack resources for stack: ${stackName}`,
+        error instanceof Error ? error : new Error(String(error))
+      );
+      return [];
+    }
   }
 
   private async getRootChildren() {

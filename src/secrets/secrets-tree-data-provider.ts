@@ -3,6 +3,7 @@ import { AmplifyBackendSecret } from "./amplify-secrets";
 import { detectAmplifyProjects } from "../explorer/amplify-project-detector";
 import { AmplifyProject, getAmplifyProject } from "../project";
 import { AWSClientProvider } from "../client/provider";
+import { logger } from "../logger";
 
 export abstract class SecretsTreeItem extends vscode.TreeItem {
   constructor(
@@ -100,6 +101,7 @@ export class SecretsTreeDataProvider
   }
 
   refresh(): void {
+    logger.debug("SecretsTreeDataProvider: Refreshing tree view");
     this._onDidChangeTreeData.fire();
   }
 }

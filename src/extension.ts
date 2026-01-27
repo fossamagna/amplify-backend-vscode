@@ -9,8 +9,15 @@ import { DefaultResourceFilterProvider } from "./explorer/resource-filter";
 import { openConsoleCommand } from "./explorer/commands/open-console-command";
 import { copyUrlCommand } from "./explorer/commands/copy-url-command";
 import { getAWSClientProvider } from "./client/provider";
+import { logger } from "./logger";
 
 export async function activate(context: vscode.ExtensionContext) {
+  // Initialize logger with output channel
+  const outputChannel = vscode.window.createOutputChannel("Amplify Backend", {
+    log: true,
+  });
+  logger.initialize(outputChannel);
+  context.subscriptions.push(outputChannel);
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "amplify-backend-explorer.openConsole",
@@ -88,7 +95,8 @@ export async function activate(context: vscode.ExtensionContext) {
   const profiles = await Auth.instance.getProfiles();
   const profile = context.workspaceState.get("profile", profiles[0] || "default");
   Auth.instance.setProfile(profile);
-  Auth.instance.onDidChangeProfile(() => {
+  Auth.instance.onDidChangeProfile((newProfile) => {
+    logger.info(`Profile changed to: ${newProfile}`);
     context.workspaceState.update("profile", Auth.instance.getProfile());
     amplifyBackendTreeDataProvider.refresh();
   });

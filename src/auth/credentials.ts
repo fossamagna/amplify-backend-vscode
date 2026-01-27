@@ -36,8 +36,11 @@ class Auth {
   }
 
   setProfile(profile: string) {
+    const oldProfile = this.profile;
     this.profile = profile;
-    this._onDidChangeProfile.fire(profile);
+    if (oldProfile !== profile) {
+      this._onDidChangeProfile.fire(profile);
+    }
   }
 
   async getRegion(profile?: string) {

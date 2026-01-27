@@ -1,7 +1,9 @@
-import { test, describe } from "mocha";
+import { test, describe, beforeEach, afterEach } from "mocha";
 import * as path from "node:path";
 import * as assert from "node:assert";
 import { detectAmplifyProjects } from "./amplify-project-detector";
+import { logger } from "../logger";
+import * as sinon from "sinon";
 
 const fixtureRoot = path.join(
   __dirname,
@@ -9,6 +11,18 @@ const fixtureRoot = path.join(
 );
 
 describe("amplify-project-detector", () => {
+  beforeEach(() => {
+    // Stub logger methods
+    sinon.stub(logger, "debug");
+    sinon.stub(logger, "info");
+    sinon.stub(logger, "warn");
+    sinon.stub(logger, "error");
+  });
+
+  afterEach(() => {
+    // Restore all stubs
+    sinon.restore();
+  });
   test("detectAmplifyProjects returns empty array if not found amplify projects", async () => {
     const projects = await detectAmplifyProjects(
       path.join(fixtureRoot, "non-amplify")
