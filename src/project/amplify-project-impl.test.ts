@@ -1,11 +1,25 @@
-import { test, describe } from "mocha";
+import { test, describe, beforeEach, afterEach } from "mocha";
 import assert from "node:assert";
 import { AmplifyProjectImpl } from "./amplify-project-impl";
 import path from "node:path";
 import { mockClient } from 'aws-sdk-client-mock';
 import { CloudFormationClient, DescribeStacksCommand } from '@aws-sdk/client-cloudformation';
+import { logger } from "../logger";
+import * as sinon from "sinon";
 
 describe("amplify-project-impl", () => {
+  beforeEach(() => {
+    // Stub logger methods
+    sinon.stub(logger, "debug");
+    sinon.stub(logger, "info");
+    sinon.stub(logger, "warn");
+    sinon.stub(logger, "error");
+  });
+
+  afterEach(() => {
+    // Restore all stubs
+    sinon.restore();
+  });
   test("getStackName returns stack name", () => {
     const projectPath = path.join(
       __dirname,
