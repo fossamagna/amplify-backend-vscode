@@ -142,6 +142,27 @@
               }
             }
           }
+        },
+        "amplifyBackend.logLevel": {
+          "type": "string",
+          "enum": [
+            "trace",
+            "debug",
+            "info",
+            "warn",
+            "error",
+            "off"
+          ],
+          "default": "info",
+          "description": "Log level for the Amplify Backend extension output channel",
+          "enumDescriptions": [
+            "All logs including trace messages",
+            "Debug and higher level logs",
+            "Info and higher level logs",
+            "Warnings and errors only",
+            "Errors only",
+            "No logs"
+          ]
         }
       }
     }
