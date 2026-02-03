@@ -3,6 +3,7 @@
 AWS Amplify Backend VSCode let you following features.
 
 - Explor AWS resources in Amplify Gen2 sandbox environment.
+- Search and filter resources in the explorer.
 - Switch AWS profile to explor the AWS resources.
 - Add/Edit/Remove secrets in sandbox environment.
 - monorepo support
@@ -36,6 +37,12 @@ In addition, in `settings.json` you can define custom filters with a pair of nam
   ]
 }
 ```
+
+#### Search resources
+
+You can search for resources in the AWS Resource Explorer by name or type. Use the search action in the tree view to filter and quickly find specific resources.
+
+![Search Resources](images/search.gif)
 
 #### Switch AWS Profile
 
