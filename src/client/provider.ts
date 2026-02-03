@@ -13,6 +13,7 @@ export function getAWSClientProvider(): AWSClientProvider {
       return new CloudFormationClient({
         profile,
         region,
+        maxAttempts: 5,
       });
     },
   };

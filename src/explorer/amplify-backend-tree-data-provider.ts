@@ -4,7 +4,6 @@ import { AmplifyBackendResourceTreeNode } from "./amplify-backend-resource-tree-
 import Auth from "../auth/credentials";
 import { AuthNode } from "./auth-node";
 import { AmplifyBackendBaseNode } from "./amplify-backend-base-node";
-import { isStackNode } from "./utils";
 import { detectAmplifyProjects } from "./amplify-project-detector";
 import { getAmplifyProject } from "../project";
 import {
@@ -19,29 +18,33 @@ import {
   CachedAmplifyProject,
 } from "./amplify-backend-resource-cache";
 
-/**
- * Filtered tree node that holds both the resource data and its filtered children
- */
-interface FilteredTreeNode {
-  type: "project" | "resource";
-  data: CachedAmplifyProject | CachedStackResource;
+type FilteredTreeNode = {
+  type: "resource";
+  data: CachedStackResource;
   children: FilteredTreeNode[];
 }
 
+type ProjectTreeNode = {
+  type: "project";
+  data: CachedAmplifyProject;
+  children: FilteredTreeNode[];
+}
+
+type TreeNode = ProjectTreeNode | FilteredTreeNode | AuthNode;
+
 export class AmplifyBackendTreeDataProvider
-  implements vscode.TreeDataProvider<AmplifyBackendBaseNode>
+  implements vscode.TreeDataProvider<TreeNode>
 {
   private _onDidChangeTreeData: vscode.EventEmitter<
-    AmplifyBackendBaseNode | undefined | void
-  > = new vscode.EventEmitter<AmplifyBackendBaseNode | undefined | void>();
+    TreeNode | undefined | void
+  > = new vscode.EventEmitter<TreeNode | undefined | void>();
   readonly onDidChangeTreeData: vscode.Event<
-    AmplifyBackendBaseNode | undefined | void
+    TreeNode | undefined | void
   > = this._onDidChangeTreeData.event;
 
   private searchFilter: string = "";
   private resourceCache: AmplifyBackendResourceCache;
-  private filteredTree: FilteredTreeNode[] = [];
-  private nodeMap = new Map<string, FilteredTreeNode>();
+  private filteredTree: (ProjectTreeNode | FilteredTreeNode)[] = [];
 
   constructor(
     private workspaceRoot: string,
@@ -55,7 +58,6 @@ export class AmplifyBackendTreeDataProvider
     logger.debug("AmplifyBackendTreeDataProvider: Refreshing tree view");
     this.resourceCache.clear();
     this.filteredTree = [];
-    this.nodeMap.clear();
     this._onDidChangeTreeData.fire();
   }
 
@@ -76,9 +78,12 @@ export class AmplifyBackendTreeDataProvider
   }
 
   getTreeItem(
-    element: AmplifyBackendBaseNode,
+    element: TreeNode,
   ): vscode.TreeItem | Thenable<vscode.TreeItem> {
-    return element;
+    if (element instanceof AuthNode) {
+      return element;
+    }
+    return this.createTreeItemFromNode(element);
   }
 
   /**
@@ -86,7 +91,6 @@ export class AmplifyBackendTreeDataProvider
    */
   private rebuildFilteredTree(): void {
     this.filteredTree = [];
-    this.nodeMap.clear();
 
     const cachedProjects = this.resourceCache.getCachedProjects();
     if (cachedProjects.length === 0) {
@@ -99,7 +103,6 @@ export class AmplifyBackendTreeDataProvider
       const filteredNode = this.filterProject(project, predicate);
       if (filteredNode) {
         this.filteredTree.push(filteredNode);
-        this.nodeMap.set(this.getNodeKey(project), filteredNode);
       }
     }
   }
@@ -110,7 +113,7 @@ export class AmplifyBackendTreeDataProvider
   private filterProject(
     project: CachedAmplifyProject,
     predicate: (resource: StackResourceSummary) => boolean,
-  ): FilteredTreeNode | null {
+  ): ProjectTreeNode | null {
     const filteredChildren = this.filterResources(project.resources, predicate);
 
     // If search filter is active and no children match, exclude this project
@@ -141,8 +144,6 @@ export class AmplifyBackendTreeDataProvider
           LogicalResourceId: resource.logicalResourceId,
           ResourceType: resource.resourceType,
           PhysicalResourceId: resource.physicalResourceId,
-          LastUpdatedTimestamp: new Date(),
-          ResourceStatus: "CREATE_COMPLETE",
         } as StackResourceSummary)
       ) {
         continue;
@@ -165,7 +166,6 @@ export class AmplifyBackendTreeDataProvider
           children: filteredChildren,
         };
         filtered.push(node);
-        this.nodeMap.set(this.getNodeKey(resource), node);
       } else {
         // For non-stack resources, check if they match the search filter
         if (this.searchFilter) {
@@ -185,23 +185,10 @@ export class AmplifyBackendTreeDataProvider
           children: [],
         };
         filtered.push(node);
-        this.nodeMap.set(this.getNodeKey(resource), node);
       }
     }
 
     return filtered;
-  }
-
-  /**
-   * Generate a unique key for a node
-   */
-  private getNodeKey(
-    data: CachedAmplifyProject | CachedStackResource,
-  ): string {
-    if ("stackName" in data) {
-      return `project:${data.stackName}`;
-    }
-    return `resource:${data.backendIdentifier.namespace}:${data.backendIdentifier.name}:${data.logicalResourceId}`;
   }
 
   private async getRootChildren() {
@@ -217,7 +204,7 @@ export class AmplifyBackendTreeDataProvider
       this.rebuildFilteredTree();
     }
 
-    const children: AmplifyBackendBaseNode[] = [];
+    const children: TreeNode[] = [];
     const profile = Auth.instance.getProfile();
     const filterName = this.resourceFilterProvider.getResourceFilterName();
     let label =
@@ -234,12 +221,7 @@ export class AmplifyBackendTreeDataProvider
 
     // Convert filtered tree nodes to tree items
     if (this.filteredTree.length > 0) {
-      for (const node of this.filteredTree) {
-        const treeItem = this.createTreeItemFromNode(node);
-        if (treeItem) {
-          children.push(treeItem);
-        }
-      }
+      children.push(...this.filteredTree);
     } else if (this.resourceCache.getCachedProjects().length === 0) {
       vscode.window.showInformationMessage(
         "Workspace has no amplify artifacts in .amplify/artifacts/cdk.out",
@@ -253,12 +235,10 @@ export class AmplifyBackendTreeDataProvider
    * Create a tree item from a filtered node
    */
   private createTreeItemFromNode(
-    node: FilteredTreeNode,
-  ): AmplifyBackendBaseNode | null {
-    const data = node.data;
-
+    node: ProjectTreeNode | FilteredTreeNode,
+  ): AmplifyBackendBaseNode {
     if (node.type === "project") {
-      const project = data as CachedAmplifyProject;
+      const project = node.data;;
       return new AmplifyBackendResourceTreeNode({
         label: project.stackName,
         cloudformationType: "AWS::CloudFormation::Stack",
@@ -271,7 +251,7 @@ export class AmplifyBackendTreeDataProvider
         accountId: project.accountId,
       });
     } else {
-      const resource = data as CachedStackResource;
+      const resource = node.data;
       return new AmplifyBackendResourceTreeNode({
         label: resource.logicalResourceId,
         cloudformationType: resource.resourceType,
@@ -287,45 +267,15 @@ export class AmplifyBackendTreeDataProvider
   }
 
   getChildren(
-    element?: AmplifyBackendBaseNode,
-  ): vscode.ProviderResult<AmplifyBackendBaseNode[]> {
+    element?: TreeNode,
+  ): vscode.ProviderResult<TreeNode[]> {
     if (element) {
-      if (isStackNode(element)) {
-        // Find the filtered node for this element
-        const nodeKey = this.getNodeKeyFromElement(element);
-        const filteredNode = this.nodeMap.get(nodeKey);
-
-        if (filteredNode && filteredNode.children.length > 0) {
-          // Return children as tree items
-          return filteredNode.children.map((child) =>
-            this.createTreeItemFromNode(child),
-          ).filter((item): item is AmplifyBackendBaseNode => item !== null);
-        }
-        return [];
-      } else {
+      if (element instanceof AuthNode) {
         return [];
       }
+      return element.children;
     } else {
       return this.getRootChildren();
     }
-  }
-
-  /**
-   * Generate a node key from a tree element
-   */
-  private getNodeKeyFromElement(element: AmplifyBackendBaseNode): string {
-    if (isStackNode(element)) {
-      const node = element as AmplifyBackendResourceTreeNode;
-      // Check if this is a root stack (project) or nested stack
-      const cachedProjects = this.resourceCache.getCachedProjects();
-      for (const project of cachedProjects) {
-        if (project.stackName === element.label) {
-          return `project:${project.stackName}`;
-        }
-      }
-      // It's a nested stack resource
-      return `resource:${node.backendIdentifier.namespace}:${node.backendIdentifier.name}:${element.label}`;
-    }
-    return "";
   }
 }
