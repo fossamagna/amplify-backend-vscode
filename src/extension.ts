@@ -8,6 +8,7 @@ import { addSecretCommand } from "./secrets/add-secret-command";
 import { DefaultResourceFilterProvider } from "./explorer/resource-filter";
 import { openConsoleCommand } from "./explorer/commands/open-console-command";
 import { copyUrlCommand } from "./explorer/commands/copy-url-command";
+import { searchFilterCommand } from "./explorer/commands/search-filter-command";
 import { getAWSClientProvider } from "./client/provider";
 import { logger } from "./logger";
 
@@ -54,6 +55,23 @@ export async function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand("amplify-backend-explorer.refresh", () => {
       amplifyBackendTreeDataProvider.refresh();
     })
+  );
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "amplify-backend-explorer.searchFilter",
+      async () => {
+        await searchFilterCommand(amplifyBackendTreeDataProvider);
+      }
+    )
+  );
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "amplify-backend-explorer.clearSearchFilter",
+      () => {
+        amplifyBackendTreeDataProvider.clearSearchFilter();
+        vscode.window.showInformationMessage("Search filter cleared");
+      }
+    )
   );
 
   const secretsTreeDataProvider = new SecretsTreeDataProvider(

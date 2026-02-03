@@ -42,6 +42,16 @@
         "title": "Switch AWS Profile"
       },
       {
+        "command": "amplify-backend-explorer.searchFilter",
+        "title": "Search/Filter Resources",
+        "icon": "$(search)"
+      },
+      {
+        "command": "amplify-backend-explorer.clearSearchFilter",
+        "title": "Clear Search Filter",
+        "icon": "$(clear-all)"
+      },
+      {
         "command": "amplify-backend-secrets-explorer.refresh",
         "title": "Refresh",
         "icon": "$(refresh)"
@@ -69,6 +79,11 @@
         },
         {
           "command": "amplify-backend-explorer.switchFilter",
+          "when": "view == amplify-backend-explorer",
+          "group": "navigation"
+        },
+        {
+          "command": "amplify-backend-explorer.searchFilter",
           "when": "view == amplify-backend-explorer",
           "group": "navigation"
         },
