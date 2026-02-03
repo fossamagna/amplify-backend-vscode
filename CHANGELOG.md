@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.15.0
+
+### Minor Changes
+
+- [#650](https://github.com/fossamagna/amplify-backend-vscode/pull/650) [`8dcd63e`](https://github.com/fossamagna/amplify-backend-vscode/commit/8dcd63e2c0e7b888bea864a2923ba46184c1f4a7) Thanks [@fossamagna](https://github.com/fossamagna)! - feat: Search and filter resources in the explorer
+
 ## 0.14.0
 
 ### Minor Changes
