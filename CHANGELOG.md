@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.15.1
+
+### Patch Changes
+
+- [#662](https://github.com/fossamagna/amplify-backend-vscode/pull/662) [`39bffcc`](https://github.com/fossamagna/amplify-backend-vscode/commit/39bffcc4b0397a7039411ed7ff8cb238e30439ca) Thanks [@fossamagna](https://github.com/fossamagna)! - fix: aws console could not be opened
+
 ## 0.15.0
 
 ### Minor Changes
