@@ -12,7 +12,7 @@ import { AmplifyProject } from "../project";
 export interface CachedStackResource {
   logicalResourceId: string;
   resourceType: string;
-  physicalResourceId?: string;
+  physicalResourceId: string;
   backendIdentifier: BackendIdentifier;
   region?: string;
   accountId?: string;
@@ -22,7 +22,8 @@ export interface CachedStackResource {
 export interface CachedAmplifyProject {
   stackName: string;
   backendIdentifier: BackendIdentifier;
-  stackArn?: string;
+  resourceType: "AWS::CloudFormation::Stack";
+  stackArn: string;
   region?: string;
   accountId?: string;
   resources: CachedStackResource[];
@@ -63,7 +64,8 @@ export class AmplifyBackendResourceCache {
             const cachedProject: CachedAmplifyProject = {
               stackName,
               backendIdentifier,
-              stackArn,
+              resourceType: "AWS::CloudFormation::Stack",
+              stackArn: stackArn!,
               region,
               accountId,
               resources,
@@ -112,7 +114,7 @@ export class AmplifyBackendResourceCache {
           const cachedResource: CachedStackResource = {
             logicalResourceId: resource.LogicalResourceId!,
             resourceType: resource.ResourceType!,
-            physicalResourceId: resource.PhysicalResourceId,
+            physicalResourceId: resource.PhysicalResourceId!,
             backendIdentifier,
             region,
             accountId,
