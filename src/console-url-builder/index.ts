@@ -1,4 +1,3 @@
-import type { StackResource } from "@aws-sdk/client-cloudformation";
 import { validate } from "@aws-sdk/util-arn-parser";
 
 export function isSupportedResourceType(resourceType: string) {
@@ -6,33 +5,38 @@ export function isSupportedResourceType(resourceType: string) {
 }
 
 export function buildUrl(
-  stackResource: Pick<StackResource, "ResourceType" | "PhysicalResourceId"> & {
+  stackResource: {
+    physicalResourceId: string;
+    resourceType: string;
     region?: string;
     accountId?: string;
   },
 ) {
-  if (!stackResource.ResourceType) {
+  console.log("Building URL for resource:", stackResource);
+  if (!stackResource.resourceType) {
     return;
   }
-  const urlBuilder = urlBuilders[stackResource.ResourceType];
+  const urlBuilder = urlBuilders[stackResource.resourceType];
   if (urlBuilder) {
     if (!stackResource.region) {
       return;
     }
-    return urlBuilder(stackResource.PhysicalResourceId!, stackResource.region);
+    return urlBuilder(stackResource.physicalResourceId!, stackResource.region);
   }
   return buildGoConsoleUrl(stackResource);
 }
 
 function buildGoConsoleUrl(
-  stackResource: Pick<StackResource, "ResourceType" | "PhysicalResourceId"> & {
+  stackResource: {
+    physicalResourceId: string;
+    resourceType: string;
     region?: string;
     accountId?: string;
   },
 ) {
-  const { PhysicalResourceId } = stackResource;
-  if (validate(PhysicalResourceId)) {
-    return `https://console.aws.amazon.com/go/view?arn=${PhysicalResourceId}`;
+  const { physicalResourceId } = stackResource;
+  if (validate(physicalResourceId)) {
+    return `https://console.aws.amazon.com/go/view?arn=${physicalResourceId}`;
   }
 }
 

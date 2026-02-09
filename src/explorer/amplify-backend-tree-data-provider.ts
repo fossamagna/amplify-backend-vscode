@@ -17,20 +17,60 @@ import {
   CachedStackResource,
   CachedAmplifyProject,
 } from "./amplify-backend-resource-cache";
+import { buildUrl, UriComponents } from "../console-url-builder";
 
-type FilteredTreeNode = {
+export interface FilteredTreeNode {
   type: "resource";
   data: CachedStackResource;
   children: FilteredTreeNode[];
+  consoleUrl?: string | UriComponents;
 }
 
-type ProjectTreeNode = {
+export interface ProjectTreeNode {
   type: "project";
   data: CachedAmplifyProject;
   children: FilteredTreeNode[];
+  consoleUrl?: string | UriComponents;
 }
 
-type TreeNode = ProjectTreeNode | FilteredTreeNode | AuthNode;
+class FilteredTreeNodeImpl implements FilteredTreeNode {
+  type: "resource" = "resource" as const;
+  data: CachedStackResource;
+  children: FilteredTreeNode[];
+
+  constructor(data: CachedStackResource, children: FilteredTreeNode[] = []) {
+    this.data = data;
+    this.children = children;
+  }
+
+  get consoleUrl(): string | UriComponents | undefined {
+    return this.data && buildUrl({ ...this.data });
+  }
+}
+
+class ProjectTreeNodeImpl implements ProjectTreeNode {
+  type: "project" = "project" as const;
+  data: CachedAmplifyProject;
+  children: FilteredTreeNode[];
+
+  constructor(data: CachedAmplifyProject, children: FilteredTreeNode[] = []) {
+    this.data = data;
+    this.children = children;
+  }
+
+  get consoleUrl(): string | UriComponents | undefined {
+    return (
+      this.data &&
+      buildUrl({
+        ...this.data,
+        physicalResourceId: this.data.stackArn,
+        resourceType: "AWS::CloudFormation::Stack",
+      })
+    );
+  }
+}
+
+export type TreeNode = ProjectTreeNode | FilteredTreeNode | AuthNode;
 
 export class AmplifyBackendTreeDataProvider
   implements vscode.TreeDataProvider<TreeNode>
@@ -38,9 +78,8 @@ export class AmplifyBackendTreeDataProvider
   private _onDidChangeTreeData: vscode.EventEmitter<
     TreeNode | undefined | void
   > = new vscode.EventEmitter<TreeNode | undefined | void>();
-  readonly onDidChangeTreeData: vscode.Event<
-    TreeNode | undefined | void
-  > = this._onDidChangeTreeData.event;
+  readonly onDidChangeTreeData: vscode.Event<TreeNode | undefined | void> =
+    this._onDidChangeTreeData.event;
 
   private searchFilter: string = "";
   private resourceCache: AmplifyBackendResourceCache;
@@ -77,9 +116,7 @@ export class AmplifyBackendTreeDataProvider
     this._onDidChangeTreeData.fire();
   }
 
-  getTreeItem(
-    element: TreeNode,
-  ): vscode.TreeItem | Thenable<vscode.TreeItem> {
+  getTreeItem(element: TreeNode): vscode.TreeItem | Thenable<vscode.TreeItem> {
     if (element instanceof AuthNode) {
       return element;
     }
@@ -121,11 +158,7 @@ export class AmplifyBackendTreeDataProvider
       return null;
     }
 
-    return {
-      type: "project",
-      data: project,
-      children: filteredChildren,
-    };
+    return new ProjectTreeNodeImpl(project, filteredChildren);
   }
 
   /**
@@ -160,12 +193,7 @@ export class AmplifyBackendTreeDataProvider
           continue;
         }
 
-        const node: FilteredTreeNode = {
-          type: "resource",
-          data: resource,
-          children: filteredChildren,
-        };
-        filtered.push(node);
+        filtered.push(new FilteredTreeNodeImpl(resource, filteredChildren));
       } else {
         // For non-stack resources, check if they match the search filter
         if (this.searchFilter) {
@@ -179,12 +207,7 @@ export class AmplifyBackendTreeDataProvider
           }
         }
 
-        const node: FilteredTreeNode = {
-          type: "resource",
-          data: resource,
-          children: [],
-        };
-        filtered.push(node);
+        filtered.push(new FilteredTreeNodeImpl(resource));
       }
     }
 
@@ -238,7 +261,7 @@ export class AmplifyBackendTreeDataProvider
     node: ProjectTreeNode | FilteredTreeNode,
   ): AmplifyBackendBaseNode {
     if (node.type === "project") {
-      const project = node.data;;
+      const project = node.data;
       return new AmplifyBackendResourceTreeNode({
         label: project.stackName,
         cloudformationType: "AWS::CloudFormation::Stack",
@@ -266,9 +289,7 @@ export class AmplifyBackendTreeDataProvider
     }
   }
 
-  getChildren(
-    element?: TreeNode,
-  ): vscode.ProviderResult<TreeNode[]> {
+  getChildren(element?: TreeNode): vscode.ProviderResult<TreeNode[]> {
     if (element) {
       if (element instanceof AuthNode) {
         return [];

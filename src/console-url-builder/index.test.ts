@@ -5,8 +5,8 @@ import { buildUrl } from ".";
 describe("Console URL Builder Test Suite", () => {
   test("AWS::CloudFormation::Stack", () => {
     const url = buildUrl({
-      ResourceType: "AWS::CloudFormation::Stack",
-      PhysicalResourceId:
+      resourceType: "AWS::CloudFormation::Stack",
+      physicalResourceId:
         "arn:aws:cloudformation:ap-northeast-1:123456789012:stack/amplify-amplifyvitereacttemplate-fossamagna-sandbox-5f9286339c-data123456-Q4HYM3CGZQQQ/b32ba610-2941-11ef-9062-061f906d3db3",
       region: "ap-northeast-1",
     });
@@ -18,8 +18,8 @@ describe("Console URL Builder Test Suite", () => {
 
   test("AWS::AppSync::Resolver", () => {
     const url = buildUrl({
-      ResourceType: "AWS::AppSync::Resolver",
-      PhysicalResourceId:
+      resourceType: "AWS::AppSync::Resolver",
+      physicalResourceId:
         "arn:aws:appsync:ap-northeast-1:123456789012:apis/abcdefghijklmnopqrstuvwxyz/types/Mutation/resolvers/updateTodo",
       region: "ap-northeast-1",
     });
@@ -31,8 +31,8 @@ describe("Console URL Builder Test Suite", () => {
 
   test("Custom::AmplifyDynamoDBTable", () => {
     const url = buildUrl({
-      ResourceType: "Custom::AmplifyDynamoDBTable",
-      PhysicalResourceId: "Todo-1234567890-NOE",
+      resourceType: "Custom::AmplifyDynamoDBTable",
+      physicalResourceId: "Todo-1234567890-NOE",
       region: "ap-northeast-1",
     });
     assert.strictEqual(
@@ -43,8 +43,8 @@ describe("Console URL Builder Test Suite", () => {
 
   test("AWS::DynamoDB::Table", () => {
     const url = buildUrl({
-      ResourceType: "AWS::DynamoDB::Table",
-      PhysicalResourceId: "Todo-1234567890-NOE",
+      resourceType: "AWS::DynamoDB::Table",
+      physicalResourceId: "Todo-1234567890-NOE",
       region: "ap-northeast-1",
     });
     assert.strictEqual(
@@ -55,8 +55,8 @@ describe("Console URL Builder Test Suite", () => {
 
   test("AWS::StepFunctions::StateMachine", () => {
     const url = buildUrl({
-      ResourceType: "AWS::StepFunctions::StateMachine",
-      PhysicalResourceId:
+      resourceType: "AWS::StepFunctions::StateMachine",
+      physicalResourceId:
         "arn:aws:states:ap-northeast-1:123456789012:stateMachine:AmplifyTableWaiterStateMachine01234567-aBcDeFgHiJkLmNoPqRsT",
       region: "ap-northeast-1",
     });
@@ -68,8 +68,8 @@ describe("Console URL Builder Test Suite", () => {
 
   test("AWS::AppSync::GraphQLApi", () => {
     const url = buildUrl({
-      ResourceType: "AWS::AppSync::GraphQLApi",
-      PhysicalResourceId:
+      resourceType: "AWS::AppSync::GraphQLApi",
+      physicalResourceId:
         "arn:aws:appsync:ap-northeast-1:767397698580:apis/0123456789abcdefghijklmnop",
       region: "ap-northeast-1",
     });
@@ -81,8 +81,8 @@ describe("Console URL Builder Test Suite", () => {
 
   test("AWS::AppSync::GraphQLSchema", () => {
     const url = buildUrl({
-      ResourceType: "AWS::AppSync::GraphQLSchema",
-      PhysicalResourceId: "0123456789abcdefghijklmnopGraphQLSchema",
+      resourceType: "AWS::AppSync::GraphQLSchema",
+      physicalResourceId: "0123456789abcdefghijklmnopGraphQLSchema",
       region: "ap-northeast-1",
     });
     assert.strictEqual(
@@ -93,8 +93,8 @@ describe("Console URL Builder Test Suite", () => {
 
   test("AWS::SQS::Queue", () => {
     const url = buildUrl({
-      ResourceType: "AWS::SQS::Queue",
-      PhysicalResourceId:
+      resourceType: "AWS::SQS::Queue",
+      physicalResourceId:
         "https://sqs.ap-northeast-1.amazonaws.com/123456789012/test-queue-name.fifo",
       region: "ap-northeast-1",
     });
@@ -110,8 +110,8 @@ describe("Console URL Builder Test Suite", () => {
 
   test("AWS::Events::EventBus", () => {
     const url = buildUrl({
-      ResourceType: "AWS::Events::EventBus",
-      PhysicalResourceId: "amplifyEventBus5866C2C9",
+      resourceType: "AWS::Events::EventBus",
+      physicalResourceId: "amplifyEventBus5866C2C9",
       region: "ap-northeast-1",
     });
     assert.strictEqual(
@@ -122,8 +122,8 @@ describe("Console URL Builder Test Suite", () => {
 
   test("AWS::Scheduler::Schedule", () => {
     const url = buildUrl({
-      ResourceType: "AWS::Scheduler::Schedule",
-      PhysicalResourceId: "amplify-schedule-1234567890",
+      resourceType: "AWS::Scheduler::Schedule",
+      physicalResourceId: "amplify-schedule-1234567890",
       region: "ap-northeast-1",
     });
     assert.strictEqual(
@@ -134,8 +134,8 @@ describe("Console URL Builder Test Suite", () => {
 
   test("AWS::CloudWatch::Alarm", () => {
     const url = buildUrl({
-      ResourceType: "AWS::CloudWatch::Alarm",
-      PhysicalResourceId: "amplifyAlarm1234567890",
+      resourceType: "AWS::CloudWatch::Alarm",
+      physicalResourceId: "amplifyAlarm1234567890",
       region: "ap-northeast-1",
     });
     assert.strictEqual(
@@ -146,8 +146,8 @@ describe("Console URL Builder Test Suite", () => {
 
   test("AWS::VerifiedPermissions::PolicyStore", () => {
     const url = buildUrl({
-      ResourceType: "AWS::VerifiedPermissions::PolicyStore",
-      PhysicalResourceId: "policy-store-1234567890",
+      resourceType: "AWS::VerifiedPermissions::PolicyStore",
+      physicalResourceId: "policy-store-1234567890",
       region: "ap-northeast-1",
     });
     assert.strictEqual(
@@ -158,8 +158,8 @@ describe("Console URL Builder Test Suite", () => {
 
   test("AWS::ApiGatewayV2::Api", () => {
     const url = buildUrl({
-      ResourceType: "AWS::ApiGatewayV2::Api",
-      PhysicalResourceId: "a1b2c3d4e5",
+      resourceType: "AWS::ApiGatewayV2::Api",
+      physicalResourceId: "a1b2c3d4e5",
       region: "ap-northeast-1",
     });
     assert.strictEqual(
@@ -170,8 +170,8 @@ describe("Console URL Builder Test Suite", () => {
 
   test("AWS::BedrockAgentCore::Runtime", () => {
     const url = buildUrl({
-      ResourceType: "AWS::BedrockAgentCore::Runtime",
-      PhysicalResourceId: "ABCDEFGHIJ",
+      resourceType: "AWS::BedrockAgentCore::Runtime",
+      physicalResourceId: "ABCDEFGHIJ",
       region: "us-east-1",
     });
     assert.strictEqual(
@@ -182,8 +182,8 @@ describe("Console URL Builder Test Suite", () => {
 
   test("buildGoConsoleUrl with valid ARN", () => {
     const url = buildUrl({
-      ResourceType: "AWS::SomeUnsupportedType",
-      PhysicalResourceId:
+      resourceType: "AWS::SomeUnsupportedType",
+      physicalResourceId:
         "arn:aws:ec2:us-west-2:123456789012:vpc/vpc-0e9801d129EXAMPLE",
       region: "us-west-2",
     });
@@ -195,8 +195,8 @@ describe("Console URL Builder Test Suite", () => {
 
   test("buildGoConsoleUrl with invalid ARN", () => {
     const url = buildUrl({
-      ResourceType: "AWS::SomeUnsupportedType",
-      PhysicalResourceId: "not-a-valid-arn",
+      resourceType: "AWS::SomeUnsupportedType",
+      physicalResourceId: "not-a-valid-arn",
       region: "us-west-2",
     });
     assert.strictEqual(url, undefined);

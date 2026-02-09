@@ -1,10 +1,17 @@
 import * as vscode from "vscode";
-import { AmplifyBackendResourceTreeNode } from "../amplify-backend-resource-tree-node";
+import { TreeNode } from "../amplify-backend-tree-data-provider";
+import { AuthNode } from "../auth-node";
 
 export const createUrlCommand = (
   urlHandler: (uri: vscode.Uri) => Thenable<void>
 ) => {
-  return async (node: AmplifyBackendResourceTreeNode) => {
+  return async (node: TreeNode) => {
+    if (node instanceof AuthNode) {
+      vscode.window.showInformationMessage(
+        "URL operations are not available for authentication nodes."
+      );
+      return;
+    }
     const { consoleUrl } = node;
     if (consoleUrl) {
       const uri =
@@ -14,11 +21,11 @@ export const createUrlCommand = (
       await urlHandler(uri);
     } else {
       const selection = await vscode.window.showInformationMessage(
-        `Now ${node.cloudformationType} is not supported resource type.`,
+        `Now ${node.data.resourceType} is not supported resource type.`,
         "Request Feature"
       );
       if (selection === "Request Feature") {
-        openGitHubIssue(node.cloudformationType);
+        openGitHubIssue(node.data.resourceType);
       }
     }
   };
