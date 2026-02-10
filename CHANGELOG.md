@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.15.2
+
+### Patch Changes
+
+- [#667](https://github.com/fossamagna/amplify-backend-vscode/pull/667) [`d2f6eee`](https://github.com/fossamagna/amplify-backend-vscode/commit/d2f6eee7b0253a9cc67641f5c8d105d8b9ac2404) Thanks [@fossamagna](https://github.com/fossamagna)! - fix: resource tree would not display due to the error message `Malformed ARN`
+
 ## 0.15.1
 
 ### Patch Changes
