@@ -46,14 +46,13 @@ export class AmplifyBackendResourceCache {
     try {
       this.cache.clear();
 
-      await Promise.all(
+      const results = await Promise.allSettled(
         amplifyProjects.map(async (project) => {
           const stackName = project.getStackName();
           const backendIdentifier = project.getBackendIdentifier();
           const stackArn = await project.getStackArn();
-          const { region, accountId } = parse(stackArn ?? "");
-
-          if (stackName && backendIdentifier) {
+          if (stackArn && stackName && backendIdentifier) {
+            const { region, accountId } = parse(stackArn);
             const resources = await this.loadStackResourcesRecursively(
               backendIdentifier,
               stackArn ?? stackName,
@@ -75,6 +74,14 @@ export class AmplifyBackendResourceCache {
           }
         }),
       );
+      results.forEach((result) => {
+        if (result.status === "rejected") {
+          logger.error(
+            "Error loading Amplify backend projects",
+            result.reason instanceof Error ? result.reason : new Error(String(result.reason)),
+          );
+        }
+      });
     } finally {
       this.loading = false;
     }
