@@ -16,6 +16,7 @@ export const detectAmplifyProjects = async (
   
   const packageJsonPaths = await glob("**/package.json", {
     cwd: workspaceRoot,
+    ignore: ["**/node_modules/**", "**/dist/**", "**/build/**"],
   });
   logger.debug(`Found ${packageJsonPaths.length} package.json files`);
   
