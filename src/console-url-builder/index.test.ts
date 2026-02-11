@@ -168,6 +168,18 @@ describe("Console URL Builder Test Suite", () => {
     );
   });
 
+  test("AWS::ApiGateway::RestApi", () => {
+    const url = buildUrl({
+      resourceType: "AWS::ApiGateway::RestApi",
+      physicalResourceId: "a1b2c3d4e5",
+      region: "ap-northeast-1",
+    });
+    assert.strictEqual(
+      url,
+      "https://ap-northeast-1.console.aws.amazon.com/apigateway/main/apis/a1b2c3d4e5/resources?api=a1b2c3d4e5&region=ap-northeast-1"
+    );
+  });
+
   test("AWS::BedrockAgentCore::Runtime", () => {
     const url = buildUrl({
       resourceType: "AWS::BedrockAgentCore::Runtime",
