@@ -164,7 +164,7 @@ describe("Console URL Builder Test Suite", () => {
     });
     assert.strictEqual(
       url,
-      "https://ap-northeast-1.console.aws.amazon.com/verifiedpermissions/policy-store-1234567890/policies/policy-abcdef123456?region=ap-northeast-1"
+      "https://ap-northeast-1.console.aws.amazon.com/verifiedpermissions/policies/policy-store-1234567890/edit?region=ap-northeast-1&policyIdentifier=policy-abcdef123456"
     );
   });
 
