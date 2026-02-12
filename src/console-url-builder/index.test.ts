@@ -156,6 +156,18 @@ describe("Console URL Builder Test Suite", () => {
     );
   });
 
+  test("AWS::VerifiedPermissions::Policy", () => {
+    const url = buildUrl({
+      resourceType: "AWS::VerifiedPermissions::Policy",
+      physicalResourceId: "policy-store-1234567890|policy-abcdef123456",
+      region: "ap-northeast-1",
+    });
+    assert.strictEqual(
+      url,
+      "https://ap-northeast-1.console.aws.amazon.com/verifiedpermissions/policy-store-1234567890/policies/policy-abcdef123456?region=ap-northeast-1"
+    );
+  });
+
   test("AWS::ApiGatewayV2::Api", () => {
     const url = buildUrl({
       resourceType: "AWS::ApiGatewayV2::Api",
