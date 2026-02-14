@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.15.3
+
+### Patch Changes
+
+- [#675](https://github.com/fossamagna/amplify-backend-vscode/pull/675) [`f9355e7`](https://github.com/fossamagna/amplify-backend-vscode/commit/f9355e743ce2874796ec1aab4a1e272dae11d960) Thanks [@Sharayu1418](https://github.com/Sharayu1418)! - Add support for AWS::VerifiedPermissions::Policy console URL
+
+- [#673](https://github.com/fossamagna/amplify-backend-vscode/pull/673) [`68b125b`](https://github.com/fossamagna/amplify-backend-vscode/commit/68b125b082bd915b3515662d03e26d71b9685ea9) Thanks [@Sharayu1418](https://github.com/Sharayu1418)! - Add support for AWS::ApiGateway::RestApi console URL
+
 ## 0.15.2
 
 ### Patch Changes
