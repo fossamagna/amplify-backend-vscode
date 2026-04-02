@@ -202,7 +202,7 @@
     "@vscode/test-electron": "^2.4.0",
     "aws-sdk-client-mock": "^4.1.0",
     "cross-env": "^10.0.0",
-    "esbuild": "^0.27.0",
+    "esbuild": "^0.28.0",
     "eslint": "^9.9.0",
     "execa": "^9.0.0",
     "mocha": "^11.0.0",
