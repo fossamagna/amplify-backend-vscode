@@ -192,7 +192,7 @@
   },
   "devDependencies": {
     "@changesets/changelog-github": "^1.0.0",
-    "@changesets/cli": "^2.27.5",
+    "@changesets/cli": "^3.0.0",
     "@eslint/js": "^9.9.0",
     "@types/mocha": "^10.0.7",
     "@types/node": "22.x",
