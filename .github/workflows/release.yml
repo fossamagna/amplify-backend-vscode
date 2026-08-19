@@ -26,7 +26,7 @@ jobs:
       - name: Create Release Pull Request or Publish to the VS Code Extension Marketplace
         uses: changesets/action@v2.1.1
         with:
-          publish: npm run release
+          publish-script: npm run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
